@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+        crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+    <script src="http://d3js.org/d3.v4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jscharting.com/3.3.1/jscharting.js"></script>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+        crossorigin="">
+    </script>
+    <script src="https://unpkg.com/file-saver/dist/FileSaver.js"></script>
+    <script type="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="https://code.jscharting.com/3.3.1/modules/types.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-umd-min.js"></script>
+    <script src="https://npmcdn.com/leaflet-geometryutil"></script>
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>  
+    <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.css' rel='stylesheet' />
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+</head>
+<body>
+ 
+
+ <div id="top">
+    <b>CPVA</b>
+ </div>
+ <div id="region">Load data
+    <select onchange="selectData()">
+        <option value="SanFrancisco">San Francisco</option>
+        <option value="Proto">Proto</option>
+        <option value="Athens">Athens</option>
+    </select>
+</div>
+
+ <div id="mid">
+    <div id="setting">
+        <div id="time"><b>Setting</b></div>
+
+        <div id="pickerContainer">
+            <div class="inputsWrapper">
+                <div id="sDate">Start Date</div>
+                <input id="startDate" autocomplete="off" type="text" value="Start Date">
+                <div id="eDate">End Date</div>
+                <input id="endDate" autocomplete="off" type="text" value="End Date">
+            </div>
+        </div>
+
+        <div id="picker">
+            <div id="chartDiv"></div>
+        </div>
+
+        <div id="setTime">Time</div>
+        <div id="sTime">07:00 - 10:00</div>
+        <div class="middle">
+            <div class="multi-range-slider">
+                <input type="range" id="input-left" min="0" max="23" value="3" />
+                <input type="range" id="input-right" min="0" max="23" value="7" />
+            
+                <div class="slider">
+                    <div class="track"></div>
+                    <div class="range"></div>
+                    <div class="thumb left"></div>
+                    <div class="thumb right"></div>
+                </div>
+              </div>
+        </div>
+
+        <div id="apply"><b>Apply</b></div>>
+        
+        <div id="scheme">
+            <b>Pricing Scheme</b>
+            <div id="sScheme">
+                <input type="radio" name="pricingScheme" value="cordon" checked/>
+                <label for="radio">Cordon</label><br>
+                <input type="radio" name="pricingScheme" value="jddt"/>
+                Zonal based
+            </div>
+        </div>
+
+        <div id="price">
+            <b>Cost</b>
+            <div id="sPrice">
+                <input type="radio" name="price" value="7" checked/> 7$ <br>
+                <input type="radio" name="price" value="14"/> 14$<br>
+                <input type="radio" name="price" value="21"/> 21$
+            </div>
+        </div>
+
+        <div id="mfd"></div>
+    </div>
+
+    <div id="legend" style="display:none;">
+        <strong>Congestion Indicator</strong>
+        <nav class="legend clearfix">
+            <span style="background:#E74C3C;"></span>
+            <span style="background:#EC7063;"></span>
+            <span style="background:#F1948A;"></span>
+            <span style="background:#FADBD8;"></span>
+            <span style="background:#FDEDEC;"></span>
+            <label>0</label>
+            <label>0.4</label>
+            <label>0.6</label>
+            <label>0.8</label>
+            <label>1</label>
+        </nav>
+    </div>
+    <div id="map"></div>
+
+    <div id="state"></div>
+
+    <div id="weight">
+        <b>Weight Updater</b>
+        <div id="selector">
+            <input type="radio" name="weightIndicator" value="indicotor" checked/>
+            Congestion Indicator<br>
+            <input type="radio" name="weightIndicator" value="propagation"/>
+            Congestion Propagation
+        </div>
+
+        <div id="list">
+            <!--
+            <nav>
+                <ul class="mylist">
+                    <li>Edge 1</li>
+                    <li>Edge 2</li>
+                    <li>Edge 3</li>
+                    <li>Edge 4</li>
+                    <li>Edge 5</li>
+                </ul>
+            </nav>-->
+            <select class="mysel" style="overflow:auto;" size="2">
+                <option value="1">Edge 1</option>
+                <option value="2">Edge 2</option>
+                <option value="3">Edge 3</option>
+                <option value="4">Edge 4</option>
+                <option value="5">Edge 5</option>
+            </select>
+        </div>
+
+        <div id="updater">
+            Additional Price<br>
+            <input type="range" id="addWeight" name="addWeight" min="0" max="100" value="50" step="10"  oninput="document.getElementById('value1').innerHTML=this.value + '%';">
+            <span for="addWeight" id="value1">50%</span>
+            <div id="adding">Update</div>
+        </div>
+
+        <div id="saver" onclick="toCanvas();"></div>
+
+        <div id="cellmap"></div>
+    </div>
+
+    <div id="saved">
+        <div id = "view" onclick="viewSetting();"><b>View Setting</b></div>
+        <div id = "comp"><b>Comparison</b></div>
+        <div id = "remove"><b>Remove</b></div>
+    </div>
+
+    <div id="compair">
+    </div>
+ </div>
+ <script src="static/js/save.js"></script>
+ <script src="static/js/map.js"></script>
+ <script src="static/js/chart.js"></script>
+ <script src="static/js/weight.js"></script>
+ <script src="static/js/timeSlider.js"></script>
+ <script src="static/js/map_incoding.js"></script>
+</body>
+ </html>
