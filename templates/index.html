@@ -33,6 +33,25 @@
     <title>CPVA - Congestion Pricing Visual Analytics</title>
 </head>
 <body>
+    <div class="map-wrapper">
+        <div id="map" class="map"></div>
+        <div id="legend" style="display:none;">
+            <strong>Congestion Indicator</strong>
+            <nav class="legend clearfix">
+                <span style="background:#E74C3C;"></span>
+                <span style="background:#EC7063;"></span>
+                <span style="background:#F1948A;"></span>
+                <span style="background:#FADBD8;"></span>
+                <span style="background:#FDEDEC;"></span>
+                <label>0</label>
+                <label>0.4</label>
+                <label>0.6</label>
+                <label>0.8</label>
+                <label>1</label>
+            </nav>
+        </div>
+    </div>
+
     <div class="layout left">
         <div class="panel title">
             <a href=".">CPVA</a> 
@@ -164,5 +183,8 @@
             </div>
         </div>
     </div>
+
+    <script src="static/js/map.js"></script>
+    <script src="static/js/map_incoding.js"></script>
 </body>
 </html>

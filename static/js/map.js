@@ -1,15 +1,10 @@
-L.mapbox.accessToken = 'pk.eyJ1Ijoic2thbmcxMjMiLCJhIjoiY2w4c2J6cjV4MDVmbTN2cWZycW9oemVwOCJ9.ChFEr5f_iZhAlUfGgao5uQ';
+L.mapbox.accessToken = 'pk.eyJ1Ijoic2VvbmdidW0iLCJhIjoiY2xmMTM0czN4MDFqMzN4bmQ3enQ4YWY3MCJ9.P7jBRrMB0r4ImDGPJUwPNg';
 
 var map = L.mapbox.map('map', null, { renderer: L.canvas() })
     .setView([37.7938262, -122.41103158], 15.5)
-    .addLayer(L.mapbox.styleLayer('mapbox://styles/skang123/clb5wd9k5001615nhz0qyfam9'));
+    .addLayer(L.mapbox.styleLayer('mapbox://styles/seongbum/clf13fvi6001701til6nduacf'));
 
 map.legendControl.addLegend(document.getElementById('legend').innerHTML);
-var cellmap = L.mapbox.map('cellmap', null, { zoomControl: false })
-    .setView([37.7938262, -122.41103158], 14)
-    .addLayer(L.mapbox.styleLayer('mapbox://styles/skang123/clb5wd9k5001615nhz0qyfam9'));
-
-var cellgeoFeature = L.geoJSON().addTo(cellmap);
 var featureGroup = L.featureGroup().addTo(map);
 var drawControl = new L.Control.Draw({
     edit: {
@@ -38,11 +33,6 @@ var drawControl = new L.Control.Draw({
 
 map.on('draw:created', showPolygonArea);
 map.on('draw:edited', showPolygonAreaEdited);
-map.on('draw:deleted', deletedhex);
-
-function deletedhex() {
-    cellgeoFeature.clearLayers();
-}
 
 function showPolygonAreaEdited(e) {
     e.layers.eachLayer(function(layer) {
@@ -56,7 +46,6 @@ function showPolygonArea(e) {
     var layer = e.layer;
     
     featureGroup.clearLayers();
-    cellgeoFeature.clearLayers();
 
     layerset[0] = layer;
     featureGroup.addLayer(layer);
@@ -160,13 +149,6 @@ function showPolygonArea(e) {
             });
         layerset[1] = poly2;
         layerset[2] = geoHexgrid;
-        cellgeoFeature.addLayer(L.geoJSON(poly2));
-        cellgeoFeature.addLayer(geoHexgrid);
-        /*console.log(cellgeoFeature.getLayers()[0]._layers);
-        console.log(Object.keys(cellgeoFeature.getLayers()[0]._layers));
-        Object.keys(cellgeoFeature.getLayers()[0]._layers).forEach(function(key) {
-            console.log(cellgeoFeature.getLayers()[0]._layers[key].feature.geometry.coordinates);
-        }*/
     }
     else {
         var bbox = [-122.4259, 37.8117, -122.3813, 37.7680]
@@ -210,8 +192,6 @@ function showPolygonArea(e) {
         });
     layerset[1] = circle;
     layerset[2] = geoHexgrid;
-    cellgeoFeature.addLayer(L.geoJSON(circle));
-    cellgeoFeature.addLayer(geoHexgrid);
     }
 }
 
