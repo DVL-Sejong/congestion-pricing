@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
 
+    <link rel="stylesheet" href="/static/css/minireset.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
         integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
@@ -32,80 +33,94 @@
     <title>CPVA - Congestion Pricing Visual Analytics</title>
 </head>
 <body>
-    <div class="panel title">
-        <a href=".">CPVA</a> 
-    </div>
-
-    <div class="panel dataset">
-        <div class="panel-header">Dataset</div>
-        <div class="panel-body">
-            <label for="dataset-location">Location:</label>
-            <select id="dataset-location" name="datasetLocation">
-                <option value="SanFrancisco">San Francisco</option>
-                <option value="Proto">Proto</option>
-                <option value="Athens">Athens</option>
-            </select>
+    <div class="layout left">
+        <div class="panel title">
+            <a href=".">CPVA</a> 
         </div>
-    </div>
 
-    <div class="panel filter">
-        <div class="panel-header">Filter</div>
-        <div class="panel-body">
-            <div class="visualization calendar-heatmap">
-
+        <div class="panel dataset">
+            <div class="panel-header">Dataset</div>
+            <div class="panel-body">
+                <label for="dataset-location">Location:</label>
+                <select id="dataset-location" name="datasetLocation">
+                    <option value="SanFrancisco">San Francisco</option>
+                    <option value="Proto">Proto</option>
+                    <option value="Athens">Athens</option>
+                </select>
             </div>
-            <div class="panel-row">
-                <label for="filter-period">Period:</label>
-                <input type="text" id="filter-period" />
-                <strong>Time:</strong>
-                <div class="visualization time-tci">
-                    
+        </div>
+
+        <div class="panel filter">
+            <div class="panel-header">Filter</div>
+            <div class="panel-body">
+                <div class="visualization calendar-heatmap">
+
+                </div>
+                <div class="panel-row">
+                    <label for="filter-period">Period:</label>
+                    <input type="text" id="filter-period" />
+                </div>
+                <div class="panel-row">
+                    <strong>Time:</strong>
+                    <div class="visualization time-tci">
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="panel overview">
-        <div class="panel-header">Overview</div>
-        <div class="panel-body">
-            <div class="legend">
-                <input id="toggle-goal" type="checkbox" />
-                <label for="toggle-goal">Set Goal</label>
-            </div>
-            <div class="legend">
-                <div class="legend-color original">&nbsp;</div>
-                <div class="legend-name">Original</div>
-                <div class="legend-color predicted">&nbsp;</div>
-                <div class="legend-name">Predicted</div>
-            </div>
-            <div class="visualization no-congestion">
-
-            </div>
-            <div class="visualization network-tci">
-
+    <div class="layout bottom">
+        <div class="panel overview">
+            <div class="panel-header">Overview</div>
+            <div class="panel-body">
+                <div class="legend">
+                    <input id="toggle-goal" type="checkbox" />
+                    <label for="toggle-goal">Set Goal</label>
+                </div>
+                <div class="legend">
+                    <div class="legend-color original">&nbsp;</div>
+                    <div class="legend-name">Original</div>
+                    <div class="legend-color predicted">&nbsp;</div>
+                    <div class="legend-name">Predicted</div>
+                </div>
+                <div class="visualization no-congestion">
+                    <div class="visualization-title">No. of Road Netework Congesion</div>
+                    <!-- No. of Road Netework Congesion -->
+                </div>
+                <div class="visualization network-tci">
+                    <div class="visualization-title">Network TCI</div>
+                    <!-- Network TCI -->
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="panel zones">
-        <div class="panel-header">Zones</div>
-        <div class="panel-body">
-            <div class="visualization average-tci">
-
+    <div class="layout right">
+        <div class="panel zones">
+            <div class="panel-header">Zones</div>
+            <div class="panel-body">
+                <div class="visualization average-tci">
+                    <div class="visualization-title">Average TCI</div>
+                    <!-- Average TCI -->
+                </div>
+                <table id="zone-list" class="zone-list">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>TCI</th>
+                            <th>Congested Road Rate (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Zone List -->
+                    </tbody>
+                </table>
             </div>
-            <table id="zone-list" class="zone-list">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>TCI</th>
-                        <th>Congested Road Rate (%)</th>
-                    </tr>
-                </thead>
-            </table>
         </div>
     </div>
 
-    <div id="inspector" class="panel inspector">
+    <div id="inspector" class="panel inspector hidden">
         <div class="panel-header">About Target Area</div>
         <div class="panel-body">
             <div class="panel-row">
