@@ -2,7 +2,7 @@ L.mapbox.accessToken = 'pk.eyJ1Ijoic2VvbmdidW0iLCJhIjoiY2xmMTM0czN4MDFqMzN4bmQ3e
 
 var map = L.mapbox.map('map', null, { renderer: L.canvas() })
     .setView([37.7938262, -122.41103158], 15.5)
-    .addLayer(L.mapbox.styleLayer('mapbox://styles/seongbum/clf13fvi6001701til6nduacf'));
+    .addLayer(L.mapbox.styleLayer('mapbox://styles/seongbum/clf14nuri007q01nzhkzyq37x'));
 
 map.legendControl.addLegend(document.getElementById('legend').innerHTML);
 var featureGroup = L.featureGroup().addTo(map);
