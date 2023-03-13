@@ -59,7 +59,7 @@ table td {
     text-align: center;
 }
 .panel .panel-body {
-    padding: 10px;
+    padding: 0 10px 10px 10px;
     font-size: .9em;
 }
 
@@ -73,6 +73,17 @@ table td {
 .title a {
     text-decoration: none;
     color: #dd5555;
+}
+
+.dataset .panel-body {
+    display: grid;
+    grid-template-columns: min-content auto;
+    grid-gap: .5em;
+}
+.dataset .dataset-location {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .visualization.filter-datetime {
