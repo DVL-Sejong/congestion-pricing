@@ -5,6 +5,30 @@ function renderCalendar(data) {
     const months = ["Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."]
     const days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
 
+    // Define a function to convert Actual values to floats
+    function convertToFloat(actual) {
+        return parseFloat(actual);
+    }
+
+    // Convert the Actual values to floats
+    data.forEach(item => {
+        item['Actual'] = convertToFloat(item['Actual']);
+    });
+
+    // Find the min and max Actual values
+    let min_actual = Math.min(...data.map(item => item['Actual']));
+    let max_actual = Math.max(...data.map(item => item['Actual']));
+
+    // Define a function to map Actual values to a range of 0 to 1
+    function mapActualValue(actual, minActual, maxActual) {
+        return (actual - minActual) / (maxActual - minActual);
+    }
+
+    // Map the Actual values to a range of 0 to 1
+    data.forEach(item => {
+        item['Mapped'] = mapActualValue(item['Actual'], min_actual, max_actual);
+    });
+
     // 캘린더 렌더링
     const $calendar = $("#filter-datetime");
     for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
@@ -27,17 +51,35 @@ function renderCalendar(data) {
     // 여백 추가
     const firstDayOfWeek = startDate.getDay();
     for (let i = 0; i < firstDayOfWeek; i++) {
-        $calendar.prepend("<div class='empty-box'></div>");
+        $calendar.prepend("<div class='day empty-box'></div>");
     }
     const lastDayOfWeek = endDate.getDay();
     for (let i = lastDayOfWeek; i < 6; i++) {
-        $calendar.append("<div class='empty-box'></div>");
+        $calendar.append("<div class='day empty-box'></div>");
     }
 
     // 요일 추가
-    for (let i = 0; i < 7; i++) {
+    $calendar.prepend("<div class='dayname'>&nbsp;</div>");
+    for (let i = 6; i >= 0; i--) {
         $calendar.prepend("<div class='dayname'>" + days[i] + "</div>");
     }
+
+    // 평균 추가
+    const dayAverage = getDayOfWeekAverage(data);
+    for (let i = 0; i < 7; i++) {
+        const mapped = mapActualValue(dayAverage[i].average, min_actual, max_actual);
+        const avg = $("<div class='avg actual dayofweek'>&nbsp;</div>");
+        avg.css("background-color", getColor(mapped));
+        $calendar.append(avg);
+    }
+    const weekAverage = getWeeklyAverages(data);
+    for (let i = 0; i < weekAverage.length; i++) {
+        const mapped = mapActualValue(weekAverage[i], min_actual, max_actual);
+        const avg = $("<div class='avg actual weekly'>&nbsp;</div>");
+        avg.css("background-color", getColor(mapped));
+        $calendar.find(".day").eq(6 + i * 7).after(avg);
+    }
+    // $calendar.append("<div class='dayname avg-dayname'>Avg.</div>");
 
     function getColor(d) {
         return "rgba(255, 50, 50, " + d + ")";
@@ -52,6 +94,54 @@ function renderCalendar(data) {
         } else if (d <= 0.2 && d > 0) {
             return "#FD0100";
         }
+    }
+
+    function getDayOfWeekAverage(data) {
+        const dayOfWeekTotal = [0, 0, 0, 0, 0, 0, 0];
+        const dayOfWeekCount = [0, 0, 0, 0, 0, 0, 0];
+
+        data.forEach(entry => {
+            const date = new Date(entry.Date);
+            const dayOfWeek = date.getDay();
+            dayOfWeekTotal[dayOfWeek] += parseInt(entry.Actual);
+            dayOfWeekCount[dayOfWeek]++;
+        });
+
+        const dayOfWeekAverage = dayOfWeekTotal.map((total, index) => {
+            return {
+                dayOfWeek: index,
+                average: total / dayOfWeekCount[index]
+            };
+        });
+
+        return dayOfWeekAverage;
+    }
+
+    function getWeeklyAverages(data) {
+        const weeklyData = [];
+        let sum = 0;
+        let count = 0;
+
+        // 데이터를 하나씩 돌며 주 당 평균값을 계산
+        for (let i = 0; i < data.length; i++) {
+            const date = new Date(data[i].Date);
+            const dayOfWeek = date.getDay();
+
+            sum += data[i].Actual;
+            count++;
+
+            // 일요일부터 토요일까지의 데이터만 누적합과 카운트 계산
+            if (dayOfWeek === 6) {
+                weeklyData.push(sum / count);
+                sum = 0;
+                count = 0;
+            }
+        }
+
+        // 마지막 주의 평균값 추가
+        weeklyData.push(sum / count);
+
+        return weeklyData;
     }
 }
 
