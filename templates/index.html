@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.css" />
     <link rel="stylesheet" href="/static/css/style.css" />
 
-    <script src="http://d3js.org/d3.v4.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-color/1.2.1/d3-color.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://code.jscharting.com/3.3.1/jscharting.js"></script>
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
@@ -72,7 +76,8 @@
         <div class="panel filter">
             <div class="panel-header">Filter</div>
             <div class="panel-body">
-                <div id="calendar-heatmap" class="visualization calendar-heatmap"></div>
+                <div id="filter-datetime" class="visualization filter-datetime">
+                </div>
                 <div class="panel-row">
                     <label for="filter-period">Period:</label>
                     <input type="text" id="filter-period" />
@@ -182,8 +187,10 @@
         </div>
     </div>
 
+    <script src="/static/js/visualizations/calendar_heatmap.js"></script>
+
     <script src="/static/js/map.js"></script>
     <script src="/static/js/map_incoding.js"></script>
-    <script src="/static/js/filter/calendar_heatmap.js"></script>
+    <script src="/static/js/filter/datetime.js"></script>
 </body>
 </html>

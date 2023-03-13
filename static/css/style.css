@@ -50,3 +50,23 @@ body {
 .panel .panel-body {
     padding: 10px;
 }
+
+.visualization.filter-datetime {
+    display: grid;
+    margin: 0 auto;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 2px;
+    font-size: .8em;
+    text-align: center;
+}
+.visualization.filter-datetime .day {
+    line-height: 1;
+    padding: 2px 0;
+    border: 1px solid black;
+}
+.visualization.filter-datetime .empty-box {
+    border: 1px solid black;
+}
+.visualization.filter-datetime .actual {
+    text-shadow: -1px 0 rgb(255 255 255 / 50%), 0 1px rgb(255 255 255 / 50%), 1px 0 rgb(255 255 255 / 50%), 0 -1px rgb(255 255 255 / 50%);
+}
