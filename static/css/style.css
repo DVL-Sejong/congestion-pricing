@@ -11,6 +11,11 @@ table td {
     font-size: .8em;
 }
 
+input, select {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
 .hidden {
     display: none;
 }
@@ -50,7 +55,7 @@ table td {
 .panel {
     margin: 10px 0;
     background-color: white;
-    box-shadow: 0 0 5px #aaa;
+    box-shadow: 0 0 5px #999;
     border-radius: 10px;
 }
 .panel .panel-header {
@@ -81,34 +86,47 @@ table td {
     grid-gap: .5em;
 }
 .dataset .dataset-location {
-    border: 1px solid #ddd;
-    border-radius: 5px;
     cursor: pointer;
 }
 
-.visualization.filter-datetime {
+.filter .panel-body {
     display: grid;
-    margin: 0 auto;
-    grid-template-columns: repeat(7, 1fr) 15px;
+    grid-template-columns: min-content auto;
+    grid-gap: .5em;
+}
+.filter .visualization.filter-datetime {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr) 17px;
     grid-gap: 1px;
     font-size: .8em;
     text-align: center;
 }
-.visualization.filter-datetime .avg-dayname {
+.filter .visualization.filter-datetime .avg-dayname {
     font-size: .8em;
 }
-.visualization.filter-datetime .day,
-.visualization.filter-datetime .avg {
+.filter .visualization.filter-datetime .day,
+.filter .visualization.filter-datetime .avg {
     line-height: 1;
     padding: 2px 0;
     /* border: 1px solid black; */
 }
-.visualization.filter-datetime .empty-box {
+.filter .visualization.filter-datetime .empty-box {
     /* border: 1px solid black; */
+    cursor: default;
 }
-.visualization.filter-datetime .actual {
+.filter .visualization.filter-datetime .actual {
     text-shadow: -1px 0 rgb(255 255 255 / 50%), 0 1px rgb(255 255 255 / 50%), 1px 0 rgb(255 255 255 / 50%), 0 -1px rgb(255 255 255 / 50%);
+    cursor: pointer;
 }
-.visualization.filter-datetime .avg.dayofweek {
-    height: 15px;
+.filter .visualization.filter-datetime .avg {
+    cursor: default;
+}
+.filter .visualization.filter-datetime .avg.dayofweek {
+    margin-top: 2px;
+    height: 17px;
+}
+.filter .visualization.filter-datetime .avg.weekly {
+    margin-left: 2px;
 }

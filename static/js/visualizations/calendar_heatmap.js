@@ -59,7 +59,7 @@ function renderCalendar(data) {
     }
 
     // 요일 추가
-    $calendar.prepend("<div class='dayname'>&nbsp;</div>");
+    $calendar.prepend("<div class='dayname'></div>");
     for (let i = 6; i >= 0; i--) {
         $calendar.prepend("<div class='dayname'>" + days[i] + "</div>");
     }
@@ -68,14 +68,14 @@ function renderCalendar(data) {
     const dayAverage = getDayOfWeekAverage(data);
     for (let i = 0; i < 7; i++) {
         const mapped = mapActualValue(dayAverage[i].average, min_actual, max_actual);
-        const avg = $("<div class='avg actual dayofweek'>&nbsp;</div>");
+        const avg = $("<div class='avg actual dayofweek'></div>");
         avg.css("background-color", getColor(mapped));
         $calendar.append(avg);
     }
     const weekAverage = getWeeklyAverages(data);
     for (let i = 0; i < weekAverage.length; i++) {
         const mapped = mapActualValue(weekAverage[i], min_actual, max_actual);
-        const avg = $("<div class='avg actual weekly'>&nbsp;</div>");
+        const avg = $("<div class='avg actual weekly'></div>");
         avg.css("background-color", getColor(mapped));
         $calendar.find(".day").eq(6 + i * 7).after(avg);
     }

@@ -17,7 +17,7 @@ d3.csv('static/data/SanFrancisco_edges.csv', function(error, data) {
                 var m_polyline = new L.polyline(polylineGeometrys, {
                     color: mcolor,
                     weight: 5,
-                    opacity: 0.6,
+                    opacity: 1,
                     customData: {
                         edge_index: n,
                         edge_osmid: data[n].osmid,
