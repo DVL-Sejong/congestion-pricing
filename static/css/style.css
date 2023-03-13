@@ -91,10 +91,10 @@ input, select {
 
 .filter .panel-body {
     display: grid;
-    grid-template-columns: min-content auto;
+    grid-template-columns: auto 225px;
     grid-gap: .5em;
 }
-.filter .visualization.filter-datetime {
+.filter .visualization.filter-date {
     grid-column-start: 1;
     grid-column-end: -1;
     display: grid;
@@ -103,30 +103,30 @@ input, select {
     font-size: .8em;
     text-align: center;
 }
-.filter .visualization.filter-datetime .avg-dayname {
+.filter .visualization.filter-date .avg-dayname {
     font-size: .8em;
 }
-.filter .visualization.filter-datetime .day,
-.filter .visualization.filter-datetime .avg {
+.filter .visualization.filter-date .day,
+.filter .visualization.filter-date .avg {
     line-height: 1;
     padding: 2px 0;
     /* border: 1px solid black; */
 }
-.filter .visualization.filter-datetime .empty-box {
+.filter .visualization.filter-date .empty-box {
     /* border: 1px solid black; */
     cursor: default;
 }
-.filter .visualization.filter-datetime .actual {
+.filter .visualization.filter-date .actual {
     text-shadow: -1px 0 rgb(255 255 255 / 50%), 0 1px rgb(255 255 255 / 50%), 1px 0 rgb(255 255 255 / 50%), 0 -1px rgb(255 255 255 / 50%);
     cursor: pointer;
 }
-.filter .visualization.filter-datetime .avg {
+.filter .visualization.filter-date .avg {
     cursor: default;
 }
-.filter .visualization.filter-datetime .avg.dayofweek {
+.filter .visualization.filter-date .avg.dayofweek {
     margin-top: 2px;
     height: 17px;
 }
-.filter .visualization.filter-datetime .avg.weekly {
+.filter .visualization.filter-date .avg.weekly {
     margin-left: 2px;
 }

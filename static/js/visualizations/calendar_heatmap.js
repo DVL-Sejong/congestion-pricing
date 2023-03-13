@@ -30,7 +30,7 @@ function renderCalendar(data) {
     });
 
     // 캘린더 렌더링
-    const $calendar = $("#filter-datetime");
+    const $calendar = $("#filter-date");
     for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
         const dateString = d.toISOString().substring(0, 10);
         const day = $("<div class='day'><span class='date'>" + months[d.getMonth()+1] + "<br>" + d.getDate() + "</span></div>");
