@@ -1,5 +1,14 @@
 body {
 	font-family: "Noto Sans KR", sans-serif;
+    color: #555;
+}
+
+table th {
+    font-weight: normal;
+    font-size: .9em;
+}
+table td {
+    font-size: .8em;
 }
 
 .hidden {
@@ -41,14 +50,29 @@ body {
 .panel {
     margin: 10px 0;
     background-color: white;
-    border: 1px solid #555;
+    box-shadow: 0 0 5px #aaa;
+    border-radius: 10px;
 }
 .panel .panel-header {
     padding: 10px;
+    font-weight: bold;
     text-align: center;
 }
 .panel .panel-body {
     padding: 10px;
+    font-size: .9em;
+}
+
+.title {
+    padding: 5px;
+    font-size: 1.2em;
+    font-weight: bolder;
+    text-align: center;
+    letter-spacing: .15em;
+}
+.title a {
+    text-decoration: none;
+    color: #dd5555;
 }
 
 .visualization.filter-datetime {
