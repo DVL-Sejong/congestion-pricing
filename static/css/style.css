@@ -20,6 +20,11 @@ input, select {
     display: none;
 }
 
+.visualization-title {
+    margin-left: 1em;
+    font-weight: bold;
+}
+
 .map-wrapper {
     position: fixed;
     top: 0;
@@ -129,4 +134,8 @@ input, select {
 }
 .filter .visualization.filter-date .avg.weekly {
     margin-left: 2px;
+}
+
+.overview {
+    display: none;
 }
