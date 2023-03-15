@@ -153,6 +153,7 @@ input, select {
 .overview .panel-body {
     display: grid;
     grid-template-columns: repeat(3, auto);
+    gap: 10px;
     width: min-content;
 }
 .overview .legend-wrapper {
@@ -169,9 +170,10 @@ input, select {
 }
 .overview .legend-wrapper .legend-color {
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: .7em;
+    height: .7em;
     vertical-align: middle;
+    border-radius: .7em;
 }
 .overview .legend-wrapper .legend-name {
     display: inline-block;
