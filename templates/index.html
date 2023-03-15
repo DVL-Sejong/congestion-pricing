@@ -89,23 +89,33 @@
         <div class="panel overview">
             <div class="panel-header">Overview</div>
             <div class="panel-body">
-                <div class="legend">
-                    <input id="toggle-goal" type="checkbox" />
-                    <label for="toggle-goal">Set Goal</label>
+                <div class="legend-wrapper">
+                    <div class="legend">
+                        <input id="toggle-goal" type="checkbox" />
+                        <label for="toggle-goal">Set Goal</label>
+                    </div>
+                    <div class="legend">
+                        <div>
+                            <div class="legend-color color original"></div>
+                            <div class="legend-name">Original</div>
+                        </div>
+                        <div>
+                            <div class="legend-color color predicted"></div>
+                            <div class="legend-name">Predicted</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="legend">
-                    <div class="legend-color original">&nbsp;</div>
-                    <div class="legend-name">Original</div>
-                    <div class="legend-color predicted">&nbsp;</div>
-                    <div class="legend-name">Predicted</div>
-                </div>
-                <div class="visualization no-congestion">
+                <div>
                     <div class="visualization-title">No. of Road Netework Congesion</div>
-                    <!-- No. of Road Netework Congesion -->
+                    <div id="no-congestion" class="visualization no-congestion">
+                        <!-- No. of Road Netework Congesion -->
+                    </div>
                 </div>
-                <div class="visualization network-tci">
+                <div>
                     <div class="visualization-title">Network TCI</div>
-                    <!-- Network TCI -->
+                    <div id="network-tci" class="visualization network-tci">
+                        <!-- Network TCI -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -181,6 +191,7 @@
     <script src="/static/js/map.js"></script>
     <script src="/static/js/map_incoding.js"></script>
     <script src="/static/js/layouts/filter.js"></script>
+    <script src="/static/js/layouts/overview.js"></script>
     <script src="/static/js/layouts/zones.js"></script>
 </body>
 </html>

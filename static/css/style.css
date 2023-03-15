@@ -20,9 +20,15 @@ input, select {
     display: none;
 }
 
+.color.original {
+    background-color: steelblue;
+}
+.color.predicted {
+    background-color: seagreen;
+}
+
 .visualization-title {
-    margin-left: 1em;
-    font-weight: bold;
+    margin-left: .5em;
 }
 
 .map-wrapper {
@@ -59,6 +65,7 @@ input, select {
 
 .panel {
     margin: 10px 0;
+    overflow: hidden;
     background-color: white;
     box-shadow: 0 0 5px #999;
     border-radius: 10px;
@@ -67,9 +74,11 @@ input, select {
     padding: 10px;
     font-weight: bold;
     text-align: center;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
 }
 .panel .panel-body {
-    padding: 0 10px 10px 10px;
+    padding: 10px;
     font-size: .9em;
 }
 
@@ -79,6 +88,7 @@ input, select {
     font-weight: bolder;
     text-align: center;
     letter-spacing: .15em;
+    background-color: #f9f9f9;
 }
 .title a {
     text-decoration: none;
@@ -122,7 +132,7 @@ input, select {
     cursor: default;
 }
 .filter .visualization.filter-date .actual {
-    text-shadow: -1px 0 rgb(255 255 255 / 50%), 0 1px rgb(255 255 255 / 50%), 1px 0 rgb(255 255 255 / 50%), 0 -1px rgb(255 255 255 / 50%);
+    text-shadow: -1px 0 rgb(255 255 255 / 70%), 0 1px rgb(255 255 255 / 70%), 1px 0 rgb(255 255 255 / 70%), 0 -1px rgb(255 255 255 / 70%);
     cursor: pointer;
 }
 .filter .visualization.filter-date .avg {
@@ -134,4 +144,36 @@ input, select {
 }
 .filter .visualization.filter-date .avg.weekly {
     margin-left: 2px;
+}
+
+.overview {
+    width: min-content;
+    margin: 0 auto;
+}
+.overview .panel-body {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    width: min-content;
+}
+.overview .legend-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px;
+}
+.overview .legend-wrapper .legend {
+    width: 120px;
+    padding: 5px 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+.overview .legend-wrapper .legend-color {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+.overview .legend-wrapper .legend-name {
+    display: inline-block;
+    vertical-align: middle;
 }
