@@ -2,8 +2,8 @@ d3.csv("/data/congestion/roads/0", renderParallelCoordinates);
 
 function renderParallelCoordinates(data) {
     // set the dimensions and margins of the graph
-    var margin = { top: 5, right: 0, bottom: 10, left: 0 },
-        width = 290 - margin.left - margin.right,
+    var margin = { top: 5, right: 10, bottom: 17, left: 25 },
+        width = 480 - margin.left - margin.right,
         height = 200 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
@@ -33,13 +33,35 @@ function renderParallelCoordinates(data) {
     // Build the X scale -> it find the best position for each Y axis
     x = d3.scalePoint()
         .range([0, width])
-        .padding(1)
         .domain(dimensions);
 
     // The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
     function path(d) {
         return d3.line()(dimensions.map(function (p) { return [x(p), y[p](d[p])]; }));
     }
+
+    // Draw Y axis:
+    svg.selectAll("myAxis")
+        // For each dimension of the dataset I add a 'g' element:
+        .data(dimensions).enter()
+        .append("g")
+        // I translate this element to its right position on the x axis
+        .attr("transform", function (d) { return "translate(" + x(d) + ")"; })
+        // And I build the axis with the call function
+        .each(function (d) {
+            const axis = d3.select(this).call(d3.axisLeft().scale(y[d]));
+            if (d > 0) {
+                axis.select("path")
+                    .style("stroke", "#aaa")
+                    .attr("d", "M-6,178.5H0.5V0")
+                axis.selectAll("g").remove();
+            }
+        })
+
+    // Draw X axis
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
 
     // Draw the lines
     svg
@@ -49,21 +71,5 @@ function renderParallelCoordinates(data) {
         .attr("d", path)
         .style("fill", "none")
         .style("stroke", "steelblue")
-        .style("opacity", 0.5)
-
-    // Draw the axis:
-    svg.selectAll("myAxis")
-        // For each dimension of the dataset I add a 'g' element:
-        .data(dimensions).enter()
-        .append("g")
-        // I translate this element to its right position on the x axis
-        .attr("transform", function (d) { return "translate(" + x(d) + ")"; })
-        // And I build the axis with the call function
-        //.each(function (d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
-        // Add axis title
-        .append("text")
-        .style("text-anchor", "middle")
-        .attr("y", -5)
-        .text(function (d) { return d; })
-        .style("fill", "black")
+        .style("opacity", 0.5);
 }

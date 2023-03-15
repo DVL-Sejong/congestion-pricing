@@ -48,7 +48,7 @@ input, select {
 .layout.right {
     position: fixed;
     right: 10px;
-    width: 300px;
+    width: 500px;
 }
 .layout.bottom {
     position: fixed;
@@ -134,8 +134,4 @@ input, select {
 }
 .filter .visualization.filter-date .avg.weekly {
     margin-left: 2px;
-}
-
-.overview {
-    display: none;
 }
