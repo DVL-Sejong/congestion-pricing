@@ -61,7 +61,8 @@ function renderParallelCoordinates(data) {
     // Draw X axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x))
+        .selectAll("text").attr("fill", "#555");
 
     // Draw the lines
     svg

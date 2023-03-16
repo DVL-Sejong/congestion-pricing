@@ -168,7 +168,8 @@ function renderLineChart(data) {
         .range([0, width]);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x))
+        .selectAll("text").attr("fill", "#555");
 
     // Add Y axis
     var y = d3.scaleLinear()

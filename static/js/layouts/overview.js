@@ -29,14 +29,16 @@ function renderRoadNetworkCongestion(data) {
         .domain(data.map(function (d) { return d.Date; }));
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x))
+        .selectAll("text").attr("fill", "#555");
 
     // Add Y axis
     var y = d3.scaleLinear()
         .domain([0, d3.max(data, function (d) { return +d.actual; })])
         .range([height, 0]);
     svg.append("g")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y))
+        .selectAll("text").attr("fill", "#555");
 
     // Add bars
     svg.selectAll("rect")
@@ -70,14 +72,16 @@ function renderNetworkTCI(data) {
         .range([0, width]);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d3.format(",.0d")));
+        .call(d3.axisBottom(x).tickFormat(d3.format(",.0d")))
+        .selectAll("text").attr("fill", "#555");
 
     // Add Y axis
     var y = d3.scaleLinear()
         .domain(d3.extent(data, function (d) { return +d.actual; }))
         .range([height, 0]);
     svg.append("g")
-        .call(d3.axisLeft(y).tickFormat(d3.format(",.2f")));
+        .call(d3.axisLeft(y).tickFormat(d3.format(",.2f")))
+        .selectAll("text").attr("fill", "#555");
 
     // Add the line
     svg.append("path")
