@@ -207,6 +207,10 @@
         <div class="panel-header">About Target Area</div>
         <div class="panel-body">
             <div class="panel-row">
+                <span>Area Name:</span>
+                <span>Central Business District</span>
+            </div>
+            <div class="panel-row">
                 <label for="pricing-scheme">Pricing Scheme:</label>
                 <select id="pricing-scheme" name="pricingScheme">
                     <option value="jddt">Zonal based</option>
@@ -260,25 +264,19 @@
                 <label for="price-21">$21</label> -->
             </div>
             <hr>
-            <div class="relations">
-                <div class="relation-item hidden">
-                    <div class="relation-row">
-                        <div class="relation-no">n</div>
-                        <div class="related-zone">Between <span id="related-zone-name"></span></div>
+            <div class="panel-row relations">
+                <div class="relation">
+                    <div class="relation-no-wrapper">
+                        <div class="relation-no">1</div>
                     </div>
-                    <div class="relation-row">
-                        <div class="propagation">
-                            <span>Inflow</span>
-                            <div class="propagation-bar">
-                                <div class="propagation-value">&nbsp;</div>
-                            </div>
-                        </div>
-                        <div class="propagation">
-                            <span>Outflow</span>
-                            <div class="propagation-bar">
-                                <div class="propagation-value">&nbsp;</div>
-                            </div>
-                        </div>
+                    <div class="related-zone">Between <span id="related-zone-name">Downtown</span></div>
+                    <div class="propagation-title">Inflow</div>
+                    <div class="propagation-bar">
+                        <div class="propagation-value" style="width: 50%;"></div>
+                    </div>
+                    <div class="propagation-title">Outflow</div>
+                    <div class="propagation-bar">
+                        <div class="propagation-value" style="width: 30%;"></div>
                     </div>
                 </div>
             </div>

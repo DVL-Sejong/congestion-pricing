@@ -17,6 +17,7 @@ input, select {
 }
 
 hr {
+    margin: 10px 0;
     border: none;
     border-bottom: 1px solid #ddd;
 }
@@ -258,4 +259,35 @@ hr {
 .inspector .pricing-cost-ticks .tick {
     width: 2em;
     text-align: center;
+}
+.inspector .relations .relation {
+    display: grid;
+    grid-template-columns: 1.5em 4em auto;
+}
+.inspector .relations .relation .relation-no {
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1.2em;
+    margin-top: .2em;
+    font-size: .8em;
+    text-align: center;
+    border: 1px solid #555;
+    border-radius: 1.5em;
+}
+.inspector .relations .relation .related-zone {
+    grid-column: 2 / 4;
+}
+.inspector .relations .relation .propagation-title {
+    grid-column: 2;
+}
+.inspector .relations .relation .propagation-bar {
+    margin: 2px 0;
+    overflow: hidden;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+.inspector .relations .relation .propagation-bar .propagation-value {
+    height: 100%;
+    background-color: deepskyblue;
+    border-radius: 3px;
 }
