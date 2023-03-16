@@ -21,7 +21,7 @@ input, select {
 }
 
 .color.original {
-    background-color: steelblue;
+    background-color: deepskyblue;
 }
 .color.predicted {
     background-color: seagreen;
@@ -178,4 +178,48 @@ input, select {
 .overview .legend-wrapper .legend-name {
     display: inline-block;
     vertical-align: middle;
+}
+
+.zones .zone-list {
+    width: 100%;
+    margin-top: 10px;
+}
+.zones .zone-list tr {
+    border-bottom: 1px solid #aaa;
+}
+.zones .zone-list th, .zones .zone-list td {
+    position: relative;
+    padding: 5px 10px;
+}
+.zones .zone-list tr > th:nth-child(n+2),
+.zones .zone-list tr > td:nth-child(n+2) {
+    border-left: 1px solid #aaa;
+}
+.zones .zone-list .zone-list-body > tr > td:nth-child(2) {
+    width: 60px;
+}
+.zones .zone-list .zone-list-body > tr > td:nth-child(3) {
+    width: 150px;
+}
+.zones .zone-list .tci {
+    text-align: center;
+    color: white;
+}
+.zones .zone-list .tci.red {
+    padding: 3px;
+    background-color: #dd5555;
+    border-radius: 5px;
+}
+.zones .zone-list .congestion-road-rate-bar {
+    height: calc(1.5em + 6px);
+    background-color: deepskyblue;
+}
+.zones .zone-list .congestion-road-rate-num {
+    position: absolute;
+    top: 7px;
+    left: 0;
+    right: 0;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: -1px 0 rgb(255 255 255 / 70%), 0 1px rgb(255 255 255 / 70%), 1px 0 rgb(255 255 255 / 70%), 0 -1px rgb(255 255 255 / 70%);
 }

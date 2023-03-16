@@ -70,6 +70,6 @@ function renderParallelCoordinates(data) {
         .enter().append("path")
         .attr("d", path)
         .style("fill", "none")
-        .style("stroke", "steelblue")
+        .style("stroke", "deepskyblue")
         .style("opacity", 0.5);
 }

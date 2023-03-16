@@ -47,7 +47,7 @@ function renderRoadNetworkCongestion(data) {
         .attr("y", function (d) { return y(d.actual); })
         .attr("width", x.bandwidth())
         .attr("height", function (d) { return height - y(d.actual); })
-        .attr("fill", "steelblue");
+        .attr("fill", "deepskyblue");
 }
 
 function renderNetworkTCI(data) {
@@ -83,7 +83,7 @@ function renderNetworkTCI(data) {
     svg.append("path")
         .datum(data)
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
+        .attr("stroke", "deepskyblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(function (d) { return x(d.Date) })
