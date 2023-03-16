@@ -24,7 +24,7 @@ input, select {
     background-color: deepskyblue;
 }
 .color.predicted {
-    background-color: seagreen;
+    background-color: mediumseagreen;
 }
 
 .visualization-title {
@@ -189,14 +189,14 @@ input, select {
 }
 .zones .zone-list th, .zones .zone-list td {
     position: relative;
-    padding: 5px 10px;
+    padding: 5px;
 }
 .zones .zone-list tr > th:nth-child(n+2),
 .zones .zone-list tr > td:nth-child(n+2) {
     border-left: 1px solid #aaa;
 }
 .zones .zone-list .zone-list-body > tr > td:nth-child(2) {
-    width: 60px;
+    width: 50px;
 }
 .zones .zone-list .zone-list-body > tr > td:nth-child(3) {
     width: 150px;
@@ -207,12 +207,13 @@ input, select {
 }
 .zones .zone-list .tci.red {
     padding: 3px;
-    background-color: #dd5555;
+    background-color: rgb(255, 50, 50);
     border-radius: 5px;
 }
 .zones .zone-list .congestion-road-rate-bar {
     height: calc(1.5em + 6px);
     background-color: deepskyblue;
+    border-radius: 5px;
 }
 .zones .zone-list .congestion-road-rate-num {
     position: absolute;
