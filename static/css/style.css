@@ -60,7 +60,7 @@ input, select {
     position: fixed;
     left: 10px;
     right: 10px;
-    bottom: 20px;
+    bottom: 30px;
 }
 
 .panel {
@@ -155,12 +155,12 @@ input, select {
     grid-template-columns: repeat(3, auto);
     gap: 10px;
     width: min-content;
+    padding: 10px 15px;
 }
 .overview .legend-wrapper {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 0 10px;
 }
 .overview .legend-wrapper .legend {
     width: 120px;
