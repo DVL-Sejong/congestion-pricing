@@ -1,8 +1,19 @@
 L.mapbox.accessToken = 'pk.eyJ1Ijoic2VvbmdidW0iLCJhIjoiY2xmMTM0czN4MDFqMzN4bmQ3enQ4YWY3MCJ9.P7jBRrMB0r4ImDGPJUwPNg';
 
+// Detect color scheme
+var isDarkReaderEnabled =
+    "querySelector" in document &&
+    !!document.querySelector("meta[name=darkreader]");
+mapStyle = 'mapbox://styles/seongbum/clf14nuri007q01nzhkzyq37x';
+//if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+if (isDarkReaderEnabled) {
+    mapStyle = 'mapbox://styles/seongbum/clfajemdk000a01jvrk8ineb6';
+    console.log("dark theme enabled")
+}
+
 var map = L.mapbox.map('map', null, { renderer: L.canvas() })
     .setView([37.7938262, -122.41103158], 15.5)
-    .addLayer(L.mapbox.styleLayer('mapbox://styles/seongbum/clf14nuri007q01nzhkzyq37x'));
+    .addLayer(L.mapbox.styleLayer(mapStyle));
 
 map.legendControl.addLegend(document.getElementById('legend').innerHTML);
 var featureGroup = L.featureGroup().addTo(map);
