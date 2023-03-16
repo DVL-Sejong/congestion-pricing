@@ -16,6 +16,11 @@ input, select {
     border-radius: 5px;
 }
 
+hr {
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
 .hidden {
     display: none;
 }
@@ -223,4 +228,34 @@ input, select {
     font-weight: bold;
     text-align: center;
     text-shadow: -1px 0 rgb(255 255 255 / 70%), 0 1px rgb(255 255 255 / 70%), 1px 0 rgb(255 255 255 / 70%), 0 -1px rgb(255 255 255 / 70%);
+}
+
+.inspector {
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin: 0 auto;
+}
+.inspector .panel-row {
+    margin-bottom: 5px;
+}
+.inspector .pricing-cost-wrapper {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: .5em;
+}
+.inspector .pricing-cost {
+    width: 100%;
+}
+.inspector .pricing-cost-ticks {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: -.7em;
+    font-size: .7em;
+}
+.inspector .pricing-cost-ticks .tick {
+    width: 2em;
+    text-align: center;
 }
