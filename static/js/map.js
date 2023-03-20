@@ -46,7 +46,7 @@ map.on('draw:created', showPolygonArea);
 map.on('draw:edited', showPolygonAreaEdited);
 
 function showPolygonAreaEdited(e) {
-    e.layers.eachLayer(function(layer) {
+    e.layers.eachLayer(function (layer) {
         showPolygonArea({ layer: layer });
     });
 }
@@ -55,7 +55,7 @@ var layerset = new Array(3);
 
 function showPolygonArea(e) {
     var layer = e.layer;
-    
+
     featureGroup.clearLayers();
 
     layerset[0] = layer;
@@ -63,7 +63,7 @@ function showPolygonArea(e) {
     if ("_latlngs" in layer) {
         var bbox = [-122.4259, 37.8117, -122.3813, 37.7680]
         var cellSide = 0.2;
-        var options = {units: 'kilometers'};
+        var options = { units: 'kilometers' };
         var hexgrid = turf.squareGrid(bbox, cellSide, options);
 
         var test2 = [];
@@ -73,91 +73,89 @@ function showPolygonArea(e) {
             polyList.push([layer._latlngs[0][i].lng, layer._latlngs[0][i].lat])
         }
         polyList.push([layer._latlngs[0][0].lng, layer._latlngs[0][0].lat])
-        
+
         let poly2 = turf.polygon(test2);
 
 
-        _.each(hexgrid.features, function(hex){
+        _.each(hexgrid.features, function (hex) {
             var intersection = turf.intersect(poly2, hex.geometry);
-            if(intersection)
-            {
+            if (intersection) {
                 hex.geometry = intersection.geometry;
-            }else
-            {
-                hex.geometry ={type: "Polygon", coordinates: []}
+            } else {
+                hex.geometry = { type: "Polygon", coordinates: [] }
             }
         })
 
         var geoHexgrid = L.geoJSON(hexgrid, {
-                style: function (feature) {
-                    return {
-                        weight: 1,
-                        fillColor: false
-                    };
-                },
-                onEachFeature: function onEachFeature(featureData, featureLayer) {
-                    
-                    featureLayer.on('click', function () {
-                        geoHexgrid.setStyle({
-                            weight: 1
+            style: function (feature) {
+                return {
+                    weight: 1,
+                    fillColor: false
+                };
+            },
+            onEachFeature: function onEachFeature(featureData, featureLayer) {
+
+                featureLayer.on('click', function () {
+                    geoHexgrid.setStyle({
+                        weight: 1
+                    })
+                    d3.csv('static/data/SanFrancisco_edges.csv', function (error, data) {
+                        d3.csv('static/data/map.csv', function (error, mdata) {
+                            if (error) throw error;
+                            var x1 = 0, x2 = 100
+                            for (var i = 0; i < 4; i++) {
+                                if (featureLayer._latlngs[0][i].lat > x1) {
+                                    x1 = featureLayer._latlngs[0][i].lat
+                                }
+                                if (featureLayer._latlngs[0][i].lat < x2) {
+                                    x2 = featureLayer._latlngs[0][i].lat
+                                }
+                            }
+                            var y1 = -130, y2 = -100
+                            for (var i = 0; i < 4; i++) {
+                                if (featureLayer._latlngs[0][i].lng > y1) {
+                                    y1 = featureLayer._latlngs[0][i].lng
+                                }
+                                if (featureLayer._latlngs[0][i].lng < y2) {
+                                    y2 = featureLayer._latlngs[0][i].lng
+                                }
+                            }
+                            var cnt = 0, sum = 0
+                            for (var i = 0; i < 4468; i++) {
+                                var geometry = data[i].geometry.slice(12, data[i].geometry.length - 1);
+                                var slice = geometry.split(', ')
+                                var center = [0, 0]
+                                var location = slice[0].split(' ');
+                                center[0] += parseFloat(location[1]);
+                                center[1] += parseFloat(location[0]);
+                                location = slice[slice.length - 1].split(' ');
+                                center[0] += parseFloat(location[1]);
+                                center[1] += parseFloat(location[0]);
+                                center[0] /= 2;
+                                center[1] /= 2;
+
+                                if (center[0] > x2 && center[0] < x1 && center[1] > y2 && center[1] < y1) {
+                                    if (mdata[i].tci > 0 && mdata[i].tci <= 1) {
+                                        cnt += 1
+                                        sum += parseFloat(mdata[i].tci)
+                                    }
+                                }
+                            }
+                            console.log(sum / cnt)
+                            if (cnt != 0) {
+                                featureLayer.setStyle({
+                                    fillColor: getColor(sum / cnt),
+                                    fillOpacity: 0.6
+                                })
+                            }
                         })
-                        d3.csv('static/data/SanFrancisco_edges.csv', function(error, data) {
-                            d3.csv('static/data/map.csv', function(error, mdata) {
-                                if (error) throw error;
-                                var x1 = 0, x2 = 100
-                                for (var i = 0; i < 4; i++) {
-                                    if (featureLayer._latlngs[0][i].lat > x1) {
-                                        x1 = featureLayer._latlngs[0][i].lat
-                                    }
-                                    if (featureLayer._latlngs[0][i].lat < x2) {
-                                        x2 = featureLayer._latlngs[0][i].lat
-                                    }
-                                }
-                                var y1 = -130, y2 = -100 
-                                for (var i = 0; i < 4; i++) {
-                                    if (featureLayer._latlngs[0][i].lng > y1) {
-                                        y1 = featureLayer._latlngs[0][i].lng
-                                    }
-                                    if (featureLayer._latlngs[0][i].lng < y2) {
-                                        y2 = featureLayer._latlngs[0][i].lng
-                                    }
-                                }
-                                var cnt = 0, sum = 0
-                                for (var i = 0; i < 4468; i++) {
-                                    var geometry = data[i].geometry.slice(12, data[i].geometry.length - 1);
-                                    var slice = geometry.split(', ')
-                                    var center = [0, 0]
-                                    var location = slice[0].split(' ');
-                                    center[0] += parseFloat(location[1]);
-                                    center[1] += parseFloat(location[0]);
-                                    location = slice[slice.length-1].split(' ');
-                                    center[0] += parseFloat(location[1]);
-                                    center[1] += parseFloat(location[0]);
-                                    center[0] /= 2;
-                                    center[1] /= 2;
-                                    
-                                    if (center[0] > x2 && center[0] < x1 && center[1] > y2 && center[1] < y1) {
-                                        if (mdata[i].tci > 0 && mdata[i].tci <= 1) {
-                                            cnt += 1
-                                            sum += parseFloat(mdata[i].tci)
-                                        }
-                                    }
-                                }
-                                console.log(sum/cnt)
-                                if (cnt != 0) {
-                                    featureLayer.setStyle({
-                                        fillColor: getColor(sum/cnt),
-                                        fillOpacity: 0.6
-                                    })
-                                }
-                            })
-                        })
-                        /*featureLayer.setStyle({
-                            weight: 5
-                        })*/
-                    });
-                }
-            });
+                    })
+                    /*featureLayer.setStyle({
+                        weight: 5
+                    })*/
+                });
+            }
+        });
         layerset[1] = poly2;
         layerset[2] = geoHexgrid;
     }
@@ -165,20 +163,18 @@ function showPolygonArea(e) {
         var bbox = [-122.4259, 37.8117, -122.3813, 37.7680]
         var center = [layer._latlng.lng, layer._latlng.lat];
         var radius = layer._mRadius;
-        var coptions = {steps: 80, units: 'meters'};
+        var coptions = { steps: 80, units: 'meters' };
         var circle = turf.circle(center, radius, coptions);
         var cellSide = 0.2;
-        var options = {units: 'kilometers'};
+        var options = { units: 'kilometers' };
         var hexgrid = turf.squareGrid(bbox, cellSide, options);
 
-        _.each(hexgrid.features, function(hex){
+        _.each(hexgrid.features, function (hex) {
             var intersection = turf.intersect(circle, hex.geometry);
-            if(intersection)
-            {
+            if (intersection) {
                 hex.geometry = intersection.geometry;
-            }else
-            {
-                hex.geometry ={type: "Polygon", coordinates: []}
+            } else {
+                hex.geometry = { type: "Polygon", coordinates: [] }
             }
         })
         var geoHexgrid = L.geoJSON(hexgrid, {
@@ -201,9 +197,15 @@ function showPolygonArea(e) {
                 });
             }
         });
-    layerset[1] = circle;
-    layerset[2] = geoHexgrid;
+        layerset[1] = circle;
+        layerset[2] = geoHexgrid;
     }
+
+    // var popup = new L.Popup({ autoPan: true })
+    //     .setContent($("#inspector-template").get(0).outerHTML)
+    //     .setLatLng([37.7749, -122.4194])
+    //     .openOn(map);
+    $("#inspector").trigger("open");
 }
 
 function getColor(d) {

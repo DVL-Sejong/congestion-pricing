@@ -11,9 +11,11 @@
     <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.css" />
+    <!-- <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.css"> -->
     <link rel="stylesheet" href="/static/css/style.css" />
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.js"></script>
@@ -33,6 +35,7 @@
     <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <script src="https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js"></script>
     <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.js"></script>
+    <!-- <script src="https://api.mapbox.com/mapbox-gl-js/v2.13.0/mapbox-gl.js"></script> -->
 
     <title>CPVA - Congestion Pricing Visual Analytics</title>
 </head>
@@ -203,8 +206,11 @@
         </div>
     </div>
 
-    <div id="inspector" class="panel inspector">
-        <div class="panel-header">About Target Area</div>
+    <div id="inspector" class="panel inspector hidden">
+        <div class="panel-header">
+            <span>About Target Area</span>
+            <button class="close button">&#x2715</button>
+        </div>
         <div class="panel-body">
             <div class="panel-row">
                 <span>Area Name:</span>
@@ -288,5 +294,6 @@
     <script src="/static/js/layouts/filter.js"></script>
     <script src="/static/js/layouts/overview.js"></script>
     <script src="/static/js/layouts/zones.js"></script>
+    <script src="/static/js/layouts/inspector.js"></script>
 </body>
 </html>
