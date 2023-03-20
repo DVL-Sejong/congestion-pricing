@@ -76,6 +76,9 @@ hr {
     box-shadow: 0 0 5px #999;
     border-radius: 10px;
 }
+.panel .drag-handle {
+    cursor: default;
+}
 .panel .panel-header {
     padding: 10px;
     font-weight: bold;

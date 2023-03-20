@@ -2,7 +2,7 @@ $(document).ready(function() {
     const $inspector = $("#inspector");
 
     $inspector.draggable({
-        handle: $inspector.children(".panel-header")
+        handle: $inspector.children(".drag-handle")
     });
 
     $inspector.on("open", function() {
