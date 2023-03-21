@@ -83,18 +83,27 @@ function renderCalendar(data) {
     // $calendar.append("<div class='dayname avg-dayname'>Avg.</div>");
 
     function getColor(d) {
-        return "rgba(255, 50, 50, " + d + ")";
-        if (d <= 1 && d > 0.8) {
-            return "#ff0000"
-        } else if (d <= 0.8 && d > 0.6) {
-            return "#feafaf";
-        } else if (d <= 0.6 && d > 0.4) {
-            return "#Fe807f";
-        } else if (d <= 0.4 && d > 0.2) {
-            return "#Fd403f";
-        } else if (d <= 0.2 && d > 0) {
-            return "#FD0100";
-        }
+        if (d > 0.8)
+            return "#FDEDEC";
+        else if (d > 0.6)
+            return "#FADBD8";
+        else if (d > 0.4)
+            return "#F1948A";
+        else if (d > 0.2)
+            return "#EC7063";
+        else if (d > 0.0)
+            return "#E74C3C";
+        // if (d <= 1 && d > 0.8) {
+        //     return "#ff0000"
+        // } else if (d <= 0.8 && d > 0.6) {
+        //     return "#feafaf";
+        // } else if (d <= 0.6 && d > 0.4) {
+        //     return "#Fe807f";
+        // } else if (d <= 0.4 && d > 0.2) {
+        //     return "#Fd403f";
+        // } else if (d <= 0.2 && d > 0) {
+        //     return "#FD0100";
+        // }
     }
 
     function getDayOfWeekAverage(data) {
@@ -104,8 +113,10 @@ function renderCalendar(data) {
         data.forEach(entry => {
             const date = new Date(entry.Date);
             const dayOfWeek = date.getDay();
-            dayOfWeekTotal[dayOfWeek] += entry.Actual;
-            dayOfWeekCount[dayOfWeek]++;
+            if (entry.Actual > 0.0) {
+                dayOfWeekTotal[dayOfWeek] += entry.Actual;
+                dayOfWeekCount[dayOfWeek]++;
+            }
         });
 
         const dayOfWeekAverage = dayOfWeekTotal.map((total, index) => {
@@ -128,8 +139,10 @@ function renderCalendar(data) {
             const date = new Date(data[i].Date);
             const dayOfWeek = date.getDay();
 
-            sum += data[i].Actual;
-            count++;
+            if (data[i].Actual > 0.0) {
+                sum += data[i].Actual;
+                count++;
+            }
 
             // 일요일부터 토요일까지의 데이터만 누적합과 카운트 계산
             if (dayOfWeek === 6) {
