@@ -1,9 +1,10 @@
-d3.csv("/static/data/netCongestion.csv", renderCalendar);
+d3.csv("/static/data/sanfrancisco/city_tci_date.csv", renderCalendar);
 d3.csv("/static/data/connum.csv", renderLineChart);
 
 function renderCalendar(data) {
-    let startDate = new Date("2008-05-17");
-    let endDate = new Date("2008-06-09");
+    const dates = data.map(item => new Date(item['Date']));
+    const startDate = new Date(Math.min.apply(null, dates));
+    const endDate = new Date(Math.max.apply(null, dates));
 
     const months = ["Jan.", "Feb.", "Mar.", "Apr.", "May.", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."]
     const days = ["Sun.", "Mon.", "Tue.", "Wed.", "Thu.", "Fri.", "Sat."];
@@ -34,7 +35,7 @@ function renderCalendar(data) {
 
     // 캘린더 렌더링
     const $calendar = $("#filter-date");
-    for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+    for (let d = new Date(startDate.getTime()); d <= endDate; d.setDate(d.getDate() + 1)) {
         const dateString = d.toISOString().substring(0, 10);
         const day = $("<div class='day'><span class='date'>" + months[d.getMonth()+1] + "<br>" + d.getDate() + "</span></div>");
         if (d.getDay() === 0 || d.getDay() === 6) {
@@ -47,9 +48,6 @@ function renderCalendar(data) {
         }
         $calendar.append(day);
     }
-
-    startDate = new Date("2008-05-17");
-    endDate = new Date("2008-06-09");
 
     // 여백 추가
     const firstDayOfWeek = startDate.getDay();
@@ -106,7 +104,7 @@ function renderCalendar(data) {
         data.forEach(entry => {
             const date = new Date(entry.Date);
             const dayOfWeek = date.getDay();
-            dayOfWeekTotal[dayOfWeek] += parseInt(entry.Actual);
+            dayOfWeekTotal[dayOfWeek] += entry.Actual;
             dayOfWeekCount[dayOfWeek]++;
         });
 
