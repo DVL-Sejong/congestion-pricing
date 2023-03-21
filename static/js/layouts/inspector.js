@@ -36,10 +36,11 @@ $(document).ready(function() {
     })
 
     $inspector.on("open", function() {
-        // Inspector 모달 height 조정
+        // Inspector 모달 위치 조정
+        const width = $(this).width();
         const height = $(this).height();
         $(this)
-            .css("left", "50%")
+            .css("left", `calc(50% - ${width/2}px`)
             .css("top", `calc(50% - ${height}px)`)
             .removeClass("hidden");
     });
