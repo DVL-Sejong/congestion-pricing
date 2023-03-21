@@ -61,6 +61,16 @@ hr {
     font-size: 9px;
     color: #808080;
 }
+.open-inspector {
+    position: absolute;
+    transform: translate(calc(-100% + 2px), calc(-100% - 2px));
+    padding: 5px 10px;
+    text-align: center;
+    color: white;
+    background-color: color(srgb 0.6466 0.7725 1);
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+}
 
 .layout.left {
     position: fixed;

@@ -5,7 +5,6 @@ var isDarkReaderEnabled =
     "querySelector" in document &&
     !!document.querySelector("meta[name=darkreader]");
 mapStyle = 'mapbox://styles/seongbum/clf14nuri007q01nzhkzyq37x';
-//if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
 if (isDarkReaderEnabled) {
     mapStyle = 'mapbox://styles/seongbum/clfajemdk000a01jvrk8ineb6';
     console.log("dark theme enabled")
@@ -158,6 +157,9 @@ function showPolygonArea(e) {
         });
         layerset[1] = poly2;
         layerset[2] = geoHexgrid;
+
+        $("#inspector").trigger("add_button", [map, poly2]);
+        $("#inspector").trigger("open");
     }
     else {
         var bbox = [-122.4259, 37.8117, -122.3813, 37.7680]
@@ -200,12 +202,6 @@ function showPolygonArea(e) {
         layerset[1] = circle;
         layerset[2] = geoHexgrid;
     }
-
-    // var popup = new L.Popup({ autoPan: true })
-    //     .setContent($("#inspector-template").get(0).outerHTML)
-    //     .setLatLng([37.7749, -122.4194])
-    //     .openOn(map);
-    $("#inspector").trigger("open");
 }
 
 function getColor(d) {
