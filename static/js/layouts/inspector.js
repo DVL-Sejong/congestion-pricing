@@ -7,7 +7,11 @@ $(document).ready(function() {
 
     $inspector.on("add_button", function(e, map, polygon) {
         // 폴리곤 상단에 토글 버튼 추가
-        const button = $("#open-inspector").clone().removeClass("hidden").get(0);
+        const button = $("#open-inspector").clone()
+            .attr("id", "")
+            .removeClass("template")
+            .removeClass("hidden")
+            .get(0);
         const canvas = map._container;
     
         button.addEventListener("click", () => $("#inspector").trigger("open"));

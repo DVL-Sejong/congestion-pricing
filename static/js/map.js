@@ -42,9 +42,15 @@ var drawControl = new L.Control.Draw({
 }).addTo(map);
 
 map.on('draw:created', showPolygonArea);
-map.on('draw:edited', showPolygonAreaEdited);
+map.on('draw:edited', onPolygonAreaEdited);
+map.on('draw:deleted', onPolygonAreaDeleted)
 
-function showPolygonAreaEdited(e) {
+function onPolygonAreaDeleted(e) {
+    $(".open-inspector:not(.template)").remove();
+}
+
+function onPolygonAreaEdited(e) {
+    $(".open-inspector:not(.template)").remove();
     e.layers.eachLayer(function (layer) {
         showPolygonArea({ layer: layer });
     });
@@ -53,6 +59,8 @@ function showPolygonAreaEdited(e) {
 var layerset = new Array(3);
 
 function showPolygonArea(e) {
+    $(".open-inspector:not(.template)").remove();
+
     var layer = e.layer;
 
     featureGroup.clearLayers();
@@ -159,7 +167,6 @@ function showPolygonArea(e) {
         layerset[2] = geoHexgrid;
 
         $("#inspector").trigger("add_button", [map, poly2]);
-        $("#inspector").trigger("open");
     }
     else {
         var bbox = [-122.4259, 37.8117, -122.3813, 37.7680]
