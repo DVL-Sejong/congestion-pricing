@@ -130,3 +130,6 @@ dmypy.json
 
 .DS_Store
 .vscode/
+
+# Large data
+static/data/sanfrancisco/speed_san.csv
