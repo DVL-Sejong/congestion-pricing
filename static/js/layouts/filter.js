@@ -19,34 +19,36 @@ function renderCalendar(data) {
         item['Actual'] = convertToFloat(item['Actual']);
     });
 
-    // Find the min and max Actual values
-    let min_actual = Math.min(...data.map(item => item['Actual']));
-    let max_actual = Math.max(...data.map(item => item['Actual']));
+    // // Find the min and max Actual values
+    // let min_actual = Math.min(...data.map(item => item['Actual']));
+    // let max_actual = Math.max(...data.map(item => item['Actual']));
 
-    // Define a function to map Actual values to a range of 0 to 1
-    function mapActualValue(actual, minActual, maxActual) {
-        return (actual - minActual) / (maxActual - minActual);
-    }
+    // // Define a function to map Actual values to a range of 0 to 1
+    // function mapActualValue(actual, minActual, maxActual) {
+    //     return (actual - minActual) / (maxActual - minActual);
+    // }
 
-    // Map the Actual values to a range of 0 to 1
-    data.forEach(item => {
-        item['Mapped'] = mapActualValue(item['Actual'], min_actual, max_actual);
-    });
+    // // Map the Actual values to a range of 0 to 1
+    // data.forEach(item => {
+    //     item['Mapped'] = mapActualValue(item['Actual'], min_actual, max_actual);
+    // });
 
     // 캘린더 렌더링
     const $calendar = $("#filter-date");
     for (let d = new Date(startDate.getTime()); d <= endDate; d.setDate(d.getDate() + 1)) {
         const dateString = d.toISOString().substring(0, 10);
-        const day = $("<div class='day'><span class='date'>" + months[d.getMonth()+1] + "<br>" + d.getDate() + "</span></div>");
+        const $day = $("<div class='day calendar-day'><span class='date'>" + months[d.getMonth()] + "<br>" + d.getDate() + "</span></div>")
+            .data("date", dateString);
+        
         if (d.getDay() === 0 || d.getDay() === 6) {
-            day.addClass("weekend");
+            $day.addClass("weekend");
         }
         const actualObj = data.find(obj => obj.Date === dateString);
         if (actualObj) {
-            day.addClass("actual");
-            day.css("background-color", getColor(actualObj.Mapped));
+            $day.addClass("actual");
+            $day.css("background-color", getColor(actualObj.Actual));
         }
-        $calendar.append(day);
+        $calendar.append($day);
     }
 
     // 여백 추가
@@ -68,16 +70,16 @@ function renderCalendar(data) {
     // 평균 추가
     const dayAverage = getDayOfWeekAverage(data);
     for (let i = 0; i < 7; i++) {
-        const mapped = mapActualValue(dayAverage[i].average, min_actual, max_actual);
+        // const mapped = mapActualValue(dayAverage[i].average, min_actual, max_actual);
         const avg = $("<div class='avg actual dayofweek'></div>");
-        avg.css("background-color", getColor(mapped));
+        avg.css("background-color", getColor(dayAverage[i].average));
         $calendar.append(avg);
     }
     const weekAverage = getWeeklyAverages(data);
     for (let i = 0; i < weekAverage.length; i++) {
-        const mapped = mapActualValue(weekAverage[i], min_actual, max_actual);
+        // const mapped = mapActualValue(weekAverage[i], min_actual, max_actual);
         const avg = $("<div class='avg actual weekly'></div>");
-        avg.css("background-color", getColor(mapped));
+        avg.css("background-color", getColor(weekAverage[i]));
         $calendar.find(".day").eq(6 + i * 7).after(avg);
     }
     // $calendar.append("<div class='dayname avg-dayname'>Avg.</div>");
@@ -157,6 +159,52 @@ function renderCalendar(data) {
 
         return weeklyData;
     }
+
+    // 캘린더 마우스 이벤트
+    var isMouseDown = false;
+    var selectStartDate = null;
+    var selectEndDate = null;
+
+    $(document)
+        .on("mousedown", "#filter-date .calendar-day", onCalendarMouseDown)
+        .on("mousemove", "#filter-date .calendar-day", onCalendarMouseMove)
+        .on("mouseup", onMouseUp);
+
+    function onCalendarMouseDown(e) {
+        isMouseDown = true;
+        selectStartDate = $(this).data("date");
+    }
+    
+    function onCalendarMouseMove(e) {
+        if (isMouseDown) {
+            selectEndDate = $(this).data("date");
+            
+            if (selectStartDate && selectEndDate) {
+                var dateRange = [];
+                var currentDate = moment(selectStartDate);
+                var rangeEndDate = moment(selectEndDate);
+
+                if (currentDate.isAfter(selectEndDate)) {
+                    currentDate = moment(selectEndDate);
+                    rangeEndDate = moment(selectStartDate);
+                }
+                
+                while (currentDate.isSameOrBefore(rangeEndDate)) {
+                    dateRange.push(currentDate.format("YYYY-MM-DD"));
+                    currentDate.add(1, "days");
+                }
+                
+                onDateFilterUpdated(dateRange);
+                e.preventDefault();
+            }
+        }
+    }
+
+    function onMouseUp(e) {
+        isMouseDown = false;
+        selectStartDate = null;
+        selectEndDate = null;
+    }
 }
 
 function renderLineChart(data) {
@@ -201,340 +249,6 @@ function renderLineChart(data) {
         );
 }
 
-// class Calendar{
-//     constructor(selection, data, config = {}) {
-//         let self = this;
-//         this.selection = selection;
-//         this.data = data;
-
-//         // Graph configuration
-//         this.cfg = {
-//             'margin': {'top': 30, 'right': 30, 'bottom': 10, 'left': 50},
-//             'key': 'key',
-//             'datefield': 'date',
-//             'dateformat': '%d-%m-%Y', // https://github.com/d3/d3-time-format/blob/master/README.md#locale_format
-//             'title': false,
-//             'source': false,
-//             'rectsize': 10,
-//             'colorScale': d3.interpolateRdBu,
-//             'emptycolor': '#EEE',
-//             'year': false,
-//             'mondaystart': false,
-//             'weekdayformat': '%a',
-//             'monthformat': '%m'
-//         };
-//         Object.keys(config).forEach(function(key) {
-//             if(config[key] instanceof Object && config[key] instanceof Array === false){
-//                 Object.keys(config[key]).forEach(function(sk) {
-//                     self.cfg[key][sk] = config[key][sk];
-//                 });
-//             } else self.cfg[key] = config[key];
-//         });
-
-//         this.cfg.width = parseInt(this.selection.node().offsetWidth) - this.cfg.margin.left - this.cfg.margin.right,
-//         this.cfg.height = parseInt(this.selection.node().offsetHeight)- this.cfg.margin.top - this.cfg.margin.bottom;
-
-//         this.extentdates = d3.extent(this.data, function(d){ return d[self.cfg.datefield]});
-//         this.year = self.cfg.year ? self.cfg.year : + self.extentdates[0].substr(0,4);
-//         this.cfg.rectsize = this.cfg.width/53 < this.cfg.height/7 ? this.cfg.width/53 : this.cfg.height/7;
-//         this.dayCalc = this.cfg.mondaystart ? function(d) { return (d.getDay() + 6) % 7; } : function(d) { return d.getDay(); }
-//         this.weekCalc = this.cfg.mondaystart ? d3.timeFormat("%W") : d3.timeFormat("%U");
-//         this.cScale = d3.scaleSequential(this.cfg.colorScale);
-
-//         this.weekDay = d3.timeFormat(self.cfg.weekdayformat);
-//         this.monthName = d3.timeFormat(self.cfg.monthformat);
-
-
-//         this.initGraph();
-//     }
-//     initGraph() {
-//         var self = this;
-
-//         this.cScale.domain(d3.extent(this.data, function(d){ return +d[self.cfg.key]}).reverse())
-
-//         this.svg = this.selection.append('svg')
-//             .attr("class", "chart calendar")
-//             .attr("viewBox", "0 0 "+(this.cfg.width + this.cfg.margin.left + this.cfg.margin.right)+" "+(this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom))
-//             .attr("width", this.cfg.width + this.cfg.margin.left + this.cfg.margin.right)
-//             .attr("height", this.cfg.height + this.cfg.margin.top + this.cfg.margin.bottom);
-
-//         this.g = this.svg.append("g")
-//             .attr("transform", "translate(" + (self.cfg.margin.left) + "," + (self.cfg.margin.top) + ")");
-
-//         // TITLE
-//         if(self.cfg.title){
-//             this.svg.append('text')
-//                 .attr('class', 'title label')
-//                 .attr('text-anchor', 'middle')
-//                 .attr('transform', 'translate('+ (self.cfg.width/2) +',20)')
-//                 .text(self.cfg.title)
-//         }
-
-//         // SOURCE
-//         if(self.cfg.source){
-//             this.svg.append('text')
-//                 .attr('class', 'source label')
-//                 .attr('transform', 'translate('+ (self.cfg.margin.left) +','+(self.cfg.height + self.cfg.margin.top + self.cfg.margin.bottom - 5)+')')
-//                 .html(self.cfg.source)
-
-//         }
-
-//         this.rects = this.g.selectAll("rect")
-//             .data(function(d) { return d3.timeDays(new Date(self.year, 0, 1), new Date(self.year + 1, 0, 1)); })
-//             .enter().append("rect")
-//             .attr("width", self.cfg.rectsize)
-//             .attr("height", self.cfg.rectsize)
-//             .attr("x", function(d) { return self.weekCalc(d) * self.cfg.rectsize; })
-//             .attr("y", function(d) { return self.dayCalc(d) * self.cfg.rectsize; })
-//             .attr("fill", self.cfg.emptycolor)
-
-//         var nesteddata = d3.nest()
-//             .key(function(d) { return d[self.cfg.datefield]; })
-//             .rollup(function(d) { return +d[0][self.cfg.key]; })
-//             .object(this.data);
-
-//         this.rects.filter(function(d) { return d.yyyymmdd() in nesteddata; })
-//             .attr("fill", function(d) { return self.cScale(nesteddata[d.yyyymmdd()]); })
-//             .append("title")
-//             .text(function(d) { return d.yyyymmdd() + ": " + nesteddata[d.yyyymmdd()]; });
-
-
-//         self.drawLabels();
-//     }
-
-//     drawLabels() {
-//         var self = this;
-
-//         var j_start = this.cfg.mondaystart ? 1 : 0;
-
-//         for(var j = j_start; j < j_start+7; j++){
-//             self.g.append("text")
-//                 .attr("class", 'label')
-//                 .style("text-anchor", "end")
-//                 .attr("dy", self.cfg.rectsize * (j - j_start) + self.cfg.rectsize*0.7)
-//                 .attr("dx", "-1em")
-//                 .text(self.weekDay(new Date(2018, 0, j)));
-//         }
-//         for(var j = 0; j < 12; j++){
-//             self.g.append("text")
-//                 .attr("class", 'label')
-//                 .style("text-anchor", "middle")
-//                 .attr("dy", -5)
-//                 .attr("dx", (j*self.cfg.rectsize*4.4) + (self.cfg.rectsize*2.2))
-//                 .text(self.monthName(new Date(2018, j, 1)));
-//         }
-//     }
-
-// }
-
-// Date.prototype.yyyymmdd = function(joinchar='-') {
-//   var mm = this.getMonth() + 1;
-//   var dd = this.getDate();
-
-//   return [this.getFullYear(),
-//           (mm>9 ? '' : '0') + mm,
-//           (dd>9 ? '' : '0') + dd
-//          ].join(joinchar);
-// };
-
-// d3.csv("/static/data/netCongestion.csv", function(error, data) {
-//     if (error) throw error;
-
-//     d3.timeFormatDefaultLocale({
-//         "decimal": ".",
-//         "thousands": ",",
-//         "grouping": [3],
-//         "currency": ["$", ""],
-//         "dateTime": "%a %b %e %X %Y",
-//         "date": "%m/%d/%Y",
-//         "time": "%H:%M:%S",
-//         "periods": ["AM", "PM"],
-//         "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-//         "shortDays": ["S", "M", "T", "W", "T", "F", "S"],
-//         "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-//         "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
-//     });
-
-//     var chart = new Calendar(d3.select('#filter-datetime'), data, {
-//         'datefield': 'Date',
-//         'key': 'Actual',
-//         'year': 2008,
-//         'mondaystart': true,
-//     })
-// });
-
-// d3.csv("/static/data/netCongestion.csv", (error, data) => {
-//     var heatmap = CalendarHeatmap()
-//         .data(data)
-//         .colorRange(['#D8E6E7', '#218380'])
-//         .dateRange([new Date('2008-05-17'), new Date('2008-06-19')]);
-
-//     d3.select('#filter-datetime')
-//         .datum(data)
-//         .call(heatmap);
-// });
-
-// d3.csv("/static/data/netCongestion.csv").then(sample => {
-//     sample.sort((a, b) => new Date(a.Date) - new Date(b.Date));
-
-//     const dateValues = sample.map(dv => ({
-//         date: d3.timeDay(new Date(dv.Date)),
-//         value: Number(dv.Actual)
-//     }));
-//     console.log(dateValues);
-
-//     const svg = d3.select("#filter-datetime");
-//     const { width, height } = document
-//         .getElementById("filter-datetime")
-//         .getBoundingClientRect();
-
-
-//     function draw() {
-//         const years = d3
-//             .nest()
-//             .key(d => d.date.getUTCFullYear())
-//             .entries(dateValues)
-//             .reverse();
-
-//         const values = dateValues.map(c => c.value);
-//         const maxValue = d3.max(values);
-//         const minValue = d3.min(values);
-
-//         const cellSize = 15;
-//         const yearHeight = cellSize * 7;
-
-//         const group = svg.append("g");
-
-//         const year = group
-//             .selectAll("g")
-//             .data(years)
-//             .join("g")
-//             .attr(
-//                 "transform",
-//                 (d, i) => `translate(50, ${yearHeight * i + cellSize * 1.5})`
-//             );
-
-//         year
-//             .append("text")
-//             .attr("x", -5)
-//             .attr("y", -30)
-//             .attr("text-anchor", "end")
-//             .attr("font-size", 16)
-//             .attr("font-weight", 550)
-//             .attr("transform", "rotate(270)")
-//             .text(d => d.key);
-
-//         const formatDay = d =>
-//             ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"][d.getUTCDay()];
-//         const countDay = d => d.getUTCDay();
-//         const timeWeek = d3.utcSunday;
-//         const formatDate = d3.utcFormat("%x");
-//         const colorFn = d3
-//             .scaleSequential(d3.interpolateBuGn)
-//             .domain([Math.floor(minValue), Math.ceil(maxValue)]);
-//         const format = d3.format("+.2%");
-
-//         year
-//             .append("g")
-//             .attr("text-anchor", "end")
-//             .selectAll("text")
-//             .data(d3.range(7).map(i => new Date(1995, 0, i)))
-//             .join("text")
-//             .attr("x", -5)
-//             .attr("y", d => (countDay(d) + 0.5) * cellSize)
-//             .attr("dy", "0.31em")
-//             .attr("font-size", 12)
-//             .text(formatDay);
-
-//         year
-//             .append("g")
-//             .selectAll("rect")
-//             .data(d => d.values)
-//             .join("rect")
-//             .attr("width", cellSize - 1.5)
-//             .attr("height", cellSize - 1.5)
-//             .attr(
-//                 "x",
-//                 (d, i) => timeWeek.count(d3.utcYear(d.date), d.date) * cellSize + 10
-//             )
-//             .attr("y", d => countDay(d.date) * cellSize + 0.5)
-//             .attr("fill", d => colorFn(d.value))
-//             .append("title")
-//             .text(d => `${formatDate(d.date)}: ${d.value.toFixed(2)}`);
-
-//         const legend = group
-//             .append("g")
-//             .attr(
-//                 "transform",
-//                 `translate(10, ${years.length * yearHeight + cellSize * 4})`
-//             );
-
-//         const categoriesCount = 10;
-//         const categories = [...Array(categoriesCount)].map((_, i) => {
-//             const upperBound = (maxValue / categoriesCount) * (i + 1);
-//             const lowerBound = (maxValue / categoriesCount) * i;
-
-//             return {
-//                 upperBound,
-//                 lowerBound,
-//                 color: d3.interpolateBuGn(upperBound / maxValue),
-//                 selected: true
-//             };
-//         });
-
-//         const legendWidth = 60;
-
-//         function toggle(legend) {
-//             const { lowerBound, upperBound, selected } = legend;
-
-//             legend.selected = !selected;
-
-//             const highlightedDates = years.map(y => ({
-//                 key: y.key,
-//                 values: y.values.filter(
-//                     v => v.value > lowerBound && v.value <= upperBound
-//                 )
-//             }));
-
-//             year
-//                 .data(highlightedDates)
-//                 .selectAll("rect")
-//                 .data(d => d.values, d => d.date)
-//                 .transition()
-//                 .duration(500)
-//                 .attr("fill", d => (legend.selected ? colorFn(d.value) : "white"));
-//         }
-
-//         legend
-//             .selectAll("rect")
-//             .data(categories)
-//             .enter()
-//             .append("rect")
-//             .attr("fill", d => d.color)
-//             .attr("x", (d, i) => legendWidth * i)
-//             .attr("width", legendWidth)
-//             .attr("height", 15)
-//             .on("click", toggle);
-
-//         legend
-//             .selectAll("text")
-//             .data(categories)
-//             .join("text")
-//             .attr("transform", "rotate(90)")
-//             .attr("y", (d, i) => -legendWidth * i)
-//             .attr("dy", -30)
-//             .attr("x", 18)
-//             .attr("text-anchor", "start")
-//             .attr("font-size", 11)
-//             .text(d => `${d.lowerBound.toFixed(2)} - ${d.upperBound.toFixed(2)}`);
-
-//         legend
-//             .append("text")
-//             .attr("dy", -5)
-//             .attr("font-size", 14)
-//             .attr("text-decoration", "underline")
-//             .text("Click on category to select/deselect days");
-//     }
-
-//     draw();
-// })
+function onDateFilterUpdated(dateRange) {
+    
+}

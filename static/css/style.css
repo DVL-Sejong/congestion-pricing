@@ -158,7 +158,6 @@ hr {
     grid-column-end: -1;
     display: grid;
     grid-template-columns: repeat(7, 1fr) 17px;
-    grid-gap: 1px;
     font-size: .8em;
     text-align: center;
 }
@@ -169,7 +168,7 @@ hr {
 .filter .visualization.filter-date .avg {
     line-height: 1;
     padding: 2px 0;
-    /* border: 1px solid black; */
+    border: 1px solid white;
 }
 .filter .visualization.filter-date .empty-box {
     /* border: 1px solid black; */
