@@ -1,5 +1,6 @@
 let data_city_tci_date;
 let data_city_tci_time;
+let data_city_tci_time_grouped;
 
 d3.csv("/static/data/sanfrancisco/city_tci_date.csv", data => {
     data_city_tci_date = data;
@@ -7,8 +8,9 @@ d3.csv("/static/data/sanfrancisco/city_tci_date.csv", data => {
 });
 
 d3.csv("/static/data/sanfrancisco/city_tci_time.csv", data => {
-    data_city_tci_time = parseTimeSeasonality(data);
-    renderTimeFilter(data_city_tci_time);
+    data_city_tci_time = data;
+    data_city_tci_time_grouped = parseTimeSeasonality(data);
+    renderTimeFilter(data_city_tci_time_grouped);
 });
 
 function parseTimeSeasonality(data) {

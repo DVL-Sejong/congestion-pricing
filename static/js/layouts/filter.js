@@ -140,10 +140,19 @@ function renderDateFilter(data) {
     var selectEndDate = null;
 
     $(document)
+        .on("click", "#filter-date .empty-box", onEmptyCellClicked)
         .on("mousedown", "#filter-date .calendar-day", onCalendarMouseDown)
         .on("mousemove", "#filter-date .calendar-day", onCalendarMouseMove)
         .on("mousemove", "#filter-date", e => e.preventDefault())
         .on("mouseup", onMouseUp);
+    onEmptyCellClicked();
+
+    function onEmptyCellClicked() {
+        isMouseDown = false;
+        selectStartDate = null;
+        selectEndDate = null;
+        onDateFilterUpdated([moment(startDate).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")], true);
+    }
 
     function onCalendarMouseDown(e) {
         isMouseDown = true;
@@ -187,6 +196,9 @@ function renderTimeFilter(data) {
         width = 325 - margin.left - margin.right,
         height = 75 - margin.top - margin.bottom;
 
+    if ($("#filter-time svg").length > 0)
+        $("#filter-time svg").remove();
+
     // append the svg object to the body of the page
     var svg = d3.select("#filter-time")
         .append("svg")
@@ -223,20 +235,9 @@ function renderTimeFilter(data) {
         .attr("width", x.bandwidth())
         .attr("height", function (d) { return height - y(d.Actual); })
         .attr("fill", d => getTCIColor(d.Actual));
-
-    // // Add the line
-    // svg.append("path")
-    //     .datum(data)
-    //     .attr("fill", "none")
-    //     .attr("stroke", "deepskyblue")
-    //     .attr("stroke-width", 1.5)
-    //     .attr("d", d3.line()
-    //         .x(function (d) { return x(d.Time) })
-    //         .y(function (d) { return y(d.Actual) })
-    //     );
 }
 
-function onDateFilterUpdated(dateRange) {
+function onDateFilterUpdated(dateRange, isReset=false) {
     const startDate = dateRange[0];
     const endDate = dateRange.slice(-1)[0];
     
@@ -246,9 +247,22 @@ function onDateFilterUpdated(dateRange) {
 
     $("#filter-period").val(value);
 
+    // 선택 기간 시각화
     $("#filter-date .day").removeClass("selected").removeClass("start-date").removeClass("end-date");
-    for (dateString of dateRange)
-        $("#filter-date .day.date-" + dateString).addClass("selected");
-    $("#filter-date .day.date-" + startDate).addClass("start-date");
-    $("#filter-date .day.date-" + endDate).addClass("end-date");
+    if (!isReset) {
+        for (dateString of dateRange)
+            $("#filter-date .day.date-" + dateString).addClass("selected");
+        $("#filter-date .day.date-" + startDate).addClass("start-date");
+        $("#filter-date .day.date-" + endDate).addClass("end-date");
+    }
+
+    // 데이터 필터링
+    filteredData = data_city_tci_time.filter(item => {
+        const date = moment(item.Time.split(" ")[0]);
+        return date >= moment(startDate) && date <= moment(endDate);
+    });
+
+    // 시간 필터 렌더링
+    const data_city_tci_time_grouped = parseTimeSeasonality(filteredData);
+    renderTimeFilter(data_city_tci_time_grouped);
 }
