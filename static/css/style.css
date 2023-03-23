@@ -49,7 +49,7 @@ hr {
     height: 100%;
 }
 .map .leaflet-top.leaflet-left {
-    left: 310px;
+    left: 410px;
 }
 .legend label,
 .legend span {
@@ -158,6 +158,7 @@ hr {
     grid-column-end: -1;
     display: grid;
     grid-template-columns: repeat(7, 1fr) 17px;
+    grid-row-gap: 1px;
     font-size: .8em;
     text-align: center;
 }
@@ -169,6 +170,16 @@ hr {
     line-height: 1;
     padding: 2px 0;
     border: 1px solid white;
+}
+.filter .visualization.filter-date .day.selected {
+    border-top: 1px solid deepskyblue;
+    border-bottom: 1px solid deepskyblue;
+}
+.filter .visualization.filter-date .day.selected.start-date {
+    border-left: 1px solid deepskyblue;
+}
+.filter .visualization.filter-date .day.selected.end-date {
+    border-right: 1px solid deepskyblue;
 }
 .filter .visualization.filter-date .empty-box {
     /* border: 1px solid black; */
@@ -182,11 +193,14 @@ hr {
     cursor: default;
 }
 .filter .visualization.filter-date .avg.dayofweek {
-    margin-top: 2px;
+    margin-top: 1px;
     height: 17px;
 }
 .filter .visualization.filter-date .avg.weekly {
     margin-left: 2px;
+}
+.filter .filter-period {
+    text-align: center;
 }
 
 .overview {

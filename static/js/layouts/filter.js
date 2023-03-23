@@ -35,7 +35,8 @@ function renderDateFilter(data) {
     for (let d = new Date(startDate.getTime()); d <= endDate; d.setDate(d.getDate() + 1)) {
         const dateString = d.toISOString().substring(0, 10);
         const $day = $("<div class='day calendar-day'><span class='date'>" + months[d.getMonth()] + "<br>" + d.getDate() + "</span></div>")
-            .data("date", dateString);
+            .data("date", dateString)
+            .addClass("date-" + dateString);
         
         if (d.getDay() === 0 || d.getDay() === 6) {
             $day.addClass("weekend");
@@ -141,11 +142,13 @@ function renderDateFilter(data) {
     $(document)
         .on("mousedown", "#filter-date .calendar-day", onCalendarMouseDown)
         .on("mousemove", "#filter-date .calendar-day", onCalendarMouseMove)
+        .on("mousemove", "#filter-date", e => e.preventDefault())
         .on("mouseup", onMouseUp);
 
     function onCalendarMouseDown(e) {
         isMouseDown = true;
         selectStartDate = $(this).data("date");
+        onDateFilterUpdated([selectStartDate]);
     }
     
     function onCalendarMouseMove(e) {
@@ -168,7 +171,6 @@ function renderDateFilter(data) {
                 }
                 
                 onDateFilterUpdated(dateRange);
-                e.preventDefault();
             }
         }
     }
@@ -235,5 +237,18 @@ function renderTimeFilter(data) {
 }
 
 function onDateFilterUpdated(dateRange) {
+    const startDate = dateRange[0];
+    const endDate = dateRange.slice(-1)[0];
     
+    let value = startDate + " ~ " + endDate;
+    if (dateRange.length === 1)
+        value = startDate;
+
+    $("#filter-period").val(value);
+
+    $("#filter-date .day").removeClass("selected").removeClass("start-date").removeClass("end-date");
+    for (dateString of dateRange)
+        $("#filter-date .day.date-" + dateString).addClass("selected");
+    $("#filter-date .day.date-" + startDate).addClass("start-date");
+    $("#filter-date .day.date-" + endDate).addClass("end-date");
 }
