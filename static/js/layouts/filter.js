@@ -82,6 +82,8 @@ function renderDateFilter(data) {
     }
     // $calendar.append("<div class='dayname avg-dayname'>Avg.</div>");
 
+    $("#filter-period").val(moment(startDate).format("YYYY-MM-DD") + " ~ " + moment(endDate).format("YYYY-MM-DD"));
+
     function getDayOfWeekAverage(data) {
         const dayOfWeekTotal = [0, 0, 0, 0, 0, 0, 0];
         const dayOfWeekCount = [0, 0, 0, 0, 0, 0, 0];
@@ -145,7 +147,6 @@ function renderDateFilter(data) {
         .on("mousemove", "#filter-date .calendar-day", onCalendarMouseMove)
         .on("mousemove", "#filter-date", e => e.preventDefault())
         .on("mouseup", onMouseUp);
-    onEmptyCellClicked();
 
     function onEmptyCellClicked() {
         isMouseDown = false;
@@ -192,7 +193,7 @@ function renderDateFilter(data) {
 }
 
 function renderTimeFilter(data) {
-    var margin = { top: 0, right: 5, bottom: 17, left: 5 },
+    var margin = { top: 5, right: 5, bottom: 17, left: 5 },
         width = 325 - margin.left - margin.right,
         height = 75 - margin.top - margin.bottom;
 
@@ -235,6 +236,52 @@ function renderTimeFilter(data) {
         .attr("width", x.bandwidth())
         .attr("height", function (d) { return height - y(d.Actual); })
         .attr("fill", d => getTCIColor(d.Actual));
+
+    // Add brush
+    var brush = d3.brushX()
+        .extent([[0, 0], [width, height]])
+        .on("brush", brushed);
+
+    svg.append("g")
+        .attr("class", "brush")
+        .call(brush)
+        .select(".selection")
+        .attr("opacity", "0");
+
+    let prevTimeRange = [];
+
+    function brushed() {
+        if (!d3.event.sourceEvent) return;
+        const selection = d3.event.selection || x.range();
+
+        if (selection) {
+            const newTimeRange = [];
+            x.domain().forEach(function(d) {
+                const pos = x(d) + x.bandwidth() / 2;
+                if (pos > selection[0] && pos < selection[1]) {
+                    newTimeRange.push(d);
+                }
+            });
+            const selectedRects = svg.selectAll("rect")
+                .filter(d => d.Time >= newTimeRange[0] && d.Time <= newTimeRange.slice(-1)[0]);
+
+            // 선택 영역의 bar들에 테두리 적용
+            selectedRects.attr("stroke", "coral").attr("stroke-width", 2);
+
+            // 선택하지 않은 영역의 bar들에 테두리 제거
+            svg.selectAll("rect").filter(d => !selectedRects.data().includes(d))
+                .attr("stroke", null).attr("stroke-width", null);
+
+            // 선택 바뀌었을 경우
+            if (prevTimeRange[0] != newTimeRange[0] && prevTimeRange.slice(-1)[0] != newTimeRange.slice(-1)[0]) {
+                prevTimeRange = newTimeRange.slice();
+                onTimeFilterUpdated(newTimeRange);
+            }
+        } else {
+            svg.selectAll("rect").attr("stroke", null).attr("stroke-width", null);
+            prevTimeRange = [];
+        }
+    }
 }
 
 function onDateFilterUpdated(dateRange, isReset=false) {
@@ -245,7 +292,13 @@ function onDateFilterUpdated(dateRange, isReset=false) {
     if (dateRange.length === 1)
         value = startDate;
 
-    $("#filter-period").val(value);
+    $("#filter-period")
+        .data("period", dateRange)
+        .val(value);
+
+    if (isReset) {
+        $("#filter-period").removeData("period");
+    }
 
     // 선택 기간 시각화
     $("#filter-date .day").removeClass("selected").removeClass("start-date").removeClass("end-date");
@@ -265,4 +318,8 @@ function onDateFilterUpdated(dateRange, isReset=false) {
     // 시간 필터 렌더링
     const data_city_tci_time_grouped = parseTimeSeasonality(filteredData);
     renderTimeFilter(data_city_tci_time_grouped);
+}
+
+function onTimeFilterUpdated(timeRange, isReset=false) {
+    
 }

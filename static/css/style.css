@@ -169,17 +169,17 @@ hr {
 .filter .visualization.filter-date .avg {
     line-height: 1;
     padding: 2px 0;
-    border: 1px solid white;
+    border: 2px solid white;
 }
 .filter .visualization.filter-date .day.selected {
-    border-top: 1px solid deepskyblue;
-    border-bottom: 1px solid deepskyblue;
+    border-top: 2px solid coral;
+    border-bottom: 2px solid coral;
 }
 .filter .visualization.filter-date .day.selected.start-date {
-    border-left: 1px solid deepskyblue;
+    border-left: 2px solid coral;
 }
 .filter .visualization.filter-date .day.selected.end-date {
-    border-right: 1px solid deepskyblue;
+    border-right: 2px solid coral;
 }
 .filter .visualization.filter-date .empty-box {
     /* border: 1px solid black; */
