@@ -1,7 +1,4 @@
-d3.csv("/static/data/sanfrancisco/city_tci_date.csv", renderCalendar);
-d3.csv("/static/data/connum.csv", renderLineChart);
-
-function renderCalendar(data) {
+function renderDateFilter(data) {
     const dates = data.map(item => new Date(item['Date']));
     const startDate = new Date(Math.min.apply(null, dates));
     const endDate = new Date(Math.max.apply(null, dates));
@@ -46,7 +43,7 @@ function renderCalendar(data) {
         const actualObj = data.find(obj => obj.Date === dateString);
         if (actualObj) {
             $day.addClass("actual");
-            $day.css("background-color", getColor(actualObj.Actual));
+            $day.css("background-color", getTCIColor(actualObj.Actual));
         }
         $calendar.append($day);
     }
@@ -72,41 +69,17 @@ function renderCalendar(data) {
     for (let i = 0; i < 7; i++) {
         // const mapped = mapActualValue(dayAverage[i].average, min_actual, max_actual);
         const avg = $("<div class='avg actual dayofweek'></div>");
-        avg.css("background-color", getColor(dayAverage[i].average));
+        avg.css("background-color", getTCIColor(dayAverage[i].average));
         $calendar.append(avg);
     }
     const weekAverage = getWeeklyAverages(data);
     for (let i = 0; i < weekAverage.length; i++) {
         // const mapped = mapActualValue(weekAverage[i], min_actual, max_actual);
         const avg = $("<div class='avg actual weekly'></div>");
-        avg.css("background-color", getColor(weekAverage[i]));
+        avg.css("background-color", getTCIColor(weekAverage[i]));
         $calendar.find(".day").eq(6 + i * 7).after(avg);
     }
     // $calendar.append("<div class='dayname avg-dayname'>Avg.</div>");
-
-    function getColor(d) {
-        if (d > 0.8)
-            return "#FDEDEC";
-        else if (d > 0.6)
-            return "#FADBD8";
-        else if (d > 0.4)
-            return "#F1948A";
-        else if (d > 0.2)
-            return "#EC7063";
-        else if (d > 0.0)
-            return "#E74C3C";
-        // if (d <= 1 && d > 0.8) {
-        //     return "#ff0000"
-        // } else if (d <= 0.8 && d > 0.6) {
-        //     return "#feafaf";
-        // } else if (d <= 0.6 && d > 0.4) {
-        //     return "#Fe807f";
-        // } else if (d <= 0.4 && d > 0.2) {
-        //     return "#Fd403f";
-        // } else if (d <= 0.2 && d > 0) {
-        //     return "#FD0100";
-        // }
-    }
 
     function getDayOfWeekAverage(data) {
         const dayOfWeekTotal = [0, 0, 0, 0, 0, 0, 0];
@@ -207,9 +180,9 @@ function renderCalendar(data) {
     }
 }
 
-function renderLineChart(data) {
+function renderTimeFilter(data) {
     var margin = { top: 0, right: 5, bottom: 17, left: 5 },
-        width = 225 - margin.left - margin.right,
+        width = 325 - margin.left - margin.right,
         height = 75 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
@@ -222,9 +195,10 @@ function renderLineChart(data) {
             "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis
-    var x = d3.scaleLinear()
-        .domain(d3.extent(data, function (d) { return +d.Date; }))
-        .range([0, width]);
+    var x = d3.scaleBand()
+        .range([0, width])
+        .padding(0.1)
+        .domain(data.map(function (d) { return d.Time; }));
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x))
@@ -232,21 +206,32 @@ function renderLineChart(data) {
 
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain([0, d3.max(data, function (d) { return +d.actual; })])
+        .domain([d3.min(data, function (d) { return +d.Actual; }), d3.max(data, function (d) { return +d.Actual; })])
         .range([height, 0]);
     // svg.append("g")
     //     .call(d3.axisLeft(y));
 
-    // Add the line
-    svg.append("path")
-        .datum(data)
-        .attr("fill", "none")
-        .attr("stroke", "deepskyblue")
-        .attr("stroke-width", 1.5)
-        .attr("d", d3.line()
-            .x(function (d) { return x(d.Date) })
-            .y(function (d) { return y(d.actual) })
-        );
+    // Add bars
+    svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", function (d) { return x(d.Time); })
+        .attr("y", function (d) { return y(d.Actual); })
+        .attr("width", x.bandwidth())
+        .attr("height", function (d) { return height - y(d.Actual); })
+        .attr("fill", d => getTCIColor(d.Actual));
+
+    // // Add the line
+    // svg.append("path")
+    //     .datum(data)
+    //     .attr("fill", "none")
+    //     .attr("stroke", "deepskyblue")
+    //     .attr("stroke-width", 1.5)
+    //     .attr("d", d3.line()
+    //         .x(function (d) { return x(d.Time) })
+    //         .y(function (d) { return y(d.Actual) })
+    //     );
 }
 
 function onDateFilterUpdated(dateRange) {

@@ -75,7 +75,7 @@ hr {
 .layout.left {
     position: fixed;
     left: 10px;
-    width: 300px;
+    width: 400px;
 }
 .layout.right {
     position: fixed;
@@ -150,7 +150,7 @@ hr {
 
 .filter .panel-body {
     display: grid;
-    grid-template-columns: auto 225px;
+    grid-template-columns: auto auto;
     grid-gap: .5em;
 }
 .filter .visualization.filter-date {
