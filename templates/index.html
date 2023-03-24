@@ -127,12 +127,12 @@
     </div>
 
     <div class="layout right">
-        <div class="panel zones">
-            <div class="panel-header">Zones</div>
+        <div class="panel districts">
+            <div class="panel-header">Districts</div>
             <div class="panel-body">
                 <div class="visualization-title">Average TCI</div>
                 <div id="average-tci" class="visualization average-tci"></div>
-                <table id="zone-list" class="zone-list">
+                <table id="district-list" class="district-list">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -140,8 +140,8 @@
                             <th>Congested Road Rate</th>
                         </tr>
                     </thead>
-                    <tbody id="zone-list-body" class="zone-list-body">
-                        <!-- Zone List -->
+                    <tbody id="district-list-body" class="district-list-body">
+                        <!-- District List -->
                         <tr>
                             <td>Central Business District</td>
                             <td>
@@ -210,13 +210,13 @@
 
     <div id="inspector" class="panel inspector hidden">
         <div class="panel-header drag-handle">
-            <span>About Target Area</span>
+            <span>About Target District</span>
             <button class="close button">&#x2715</button>
         </div>
         <div class="panel-body">
             <div class="panel-row">
-                <span>Area Name:</span>
-                <span id="area-name">Central Business District</span>
+                <span>District Name:</span>
+                <span id="district-name">Central Business District</span>
             </div>
             <div class="panel-row">
                 <label for="pricing-scheme">Pricing Scheme:</label>
@@ -277,7 +277,7 @@
                     <div class="relation-no-wrapper">
                         <div class="relation-no">1</div>
                     </div>
-                    <div class="related-zone">Between <span id="related-zone-name">Downtown</span></div>
+                    <div class="related-district">Between <span id="related-district-name">Downtown</span></div>
                     <div class="propagation-title">Inflow</div>
                     <div class="propagation-bar">
                         <div class="propagation-value" style="width: 50%;"></div>
@@ -297,7 +297,7 @@
     <script src="/static/js/map/traffic_encoding.js"></script>
     <script src="/static/js/layouts/filter.js"></script>
     <script src="/static/js/layouts/overview.js"></script>
-    <script src="/static/js/layouts/zones.js"></script>
+    <script src="/static/js/layouts/districts.js"></script>
     <script src="/static/js/layouts/inspector.js"></script>
 </body>
 </html>

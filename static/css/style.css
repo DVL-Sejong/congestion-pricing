@@ -237,42 +237,42 @@ hr {
     vertical-align: middle;
 }
 
-.zones .zone-list {
+.districts .district-list {
     width: 100%;
     margin-top: 10px;
 }
-.zones .zone-list tr {
+.districts .district-list tr {
     border-bottom: 1px solid #aaa;
 }
-.zones .zone-list th, .zones .zone-list td {
+.districts .district-list th, .districts .district-list td {
     position: relative;
     padding: 5px;
 }
-.zones .zone-list tr > th:nth-child(n+2),
-.zones .zone-list tr > td:nth-child(n+2) {
+.districts .district-list tr > th:nth-child(n+2),
+.districts .district-list tr > td:nth-child(n+2) {
     border-left: 1px solid #aaa;
 }
-.zones .zone-list .zone-list-body > tr > td:nth-child(2) {
+.districts .district-list .district-list-body > tr > td:nth-child(2) {
     width: 50px;
 }
-.zones .zone-list .zone-list-body > tr > td:nth-child(3) {
+.districts .district-list .district-list-body > tr > td:nth-child(3) {
     width: 150px;
 }
-.zones .zone-list .tci {
+.districts .district-list .tci {
     text-align: center;
     color: white;
 }
-.zones .zone-list .tci.red {
+.districts .district-list .tci.red {
     padding: 3px;
     background-color: rgb(255, 50, 50);
     border-radius: 5px;
 }
-.zones .zone-list .congestion-road-rate-bar {
+.districts .district-list .congestion-road-rate-bar {
     height: calc(1.5em + 6px);
     background-color: deepskyblue;
     border-radius: 5px;
 }
-.zones .zone-list .congestion-road-rate-num {
+.districts .district-list .congestion-road-rate-num {
     position: absolute;
     top: 7px;
     left: 0;
@@ -324,7 +324,7 @@ hr {
     border: 1px solid #555;
     border-radius: 1.5em;
 }
-.inspector .relations .relation .related-zone {
+.inspector .relations .relation .related-district {
     grid-column: 2 / 4;
 }
 .inspector .relations .relation .propagation-title {

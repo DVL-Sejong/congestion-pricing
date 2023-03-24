@@ -37,7 +37,7 @@ $(document).ready(function() {
         updateButtonPosition();
     })
 
-    $inspector.on("open", function(e, area_name) {
+    $inspector.on("open", function(e, district_name) {
         // Inspector 모달 위치 조정
         const width = $(this).width();
         const height = $(this).height();
@@ -46,11 +46,11 @@ $(document).ready(function() {
             .css("top", `calc(50% - ${height}px)`)
             .removeClass("hidden");
         
-        // 모달 내부의 Area Name 설정
-        if (area_name) {
-            $("#area-name").text(area_name);
+        // 모달 내부의 District Name 설정
+        if (district_name) {
+            $("#district-name").text(district_name);
         } else {
-            $("#area-name").text("Custom Area");
+            $("#district-name").text("Custom Area");
         }
     });
 
