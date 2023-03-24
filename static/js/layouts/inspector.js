@@ -1,6 +1,7 @@
 $(document).ready(function() {
     const $inspector = $("#inspector");
 
+    // 인스펙터 모달의 드래그 핸들을 드래그하여 위치 조정
     $inspector.draggable({
         handle: $inspector.children(".drag-handle")
     });
@@ -26,6 +27,7 @@ $(document).ready(function() {
     
         canvas.appendChild(buttonContainer);
 
+        // 지도에서 보고 있는 위치를 이동할 시 토글 버튼의 위치도 이동
         function updateButtonPosition() {
             const northEast = bounds.getNorthEast();
             const containerPoint = map.latLngToContainerPoint(northEast);
@@ -35,7 +37,7 @@ $(document).ready(function() {
         updateButtonPosition();
     })
 
-    $inspector.on("open", function() {
+    $inspector.on("open", function(e, area_name) {
         // Inspector 모달 위치 조정
         const width = $(this).width();
         const height = $(this).height();
@@ -43,6 +45,13 @@ $(document).ready(function() {
             .css("left", `calc(50% - ${width/2}px`)
             .css("top", `calc(50% - ${height}px)`)
             .removeClass("hidden");
+        
+        // 모달 내부의 Area Name 설정
+        if (area_name) {
+            $("#area-name").text(area_name);
+        } else {
+            $("#area-name").text("Custom Area");
+        }
     });
 
     $inspector.on("close", function() {
