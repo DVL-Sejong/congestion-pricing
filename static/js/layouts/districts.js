@@ -4,6 +4,9 @@ function renderParallelCoordinates(data) {
         width = 480 - margin.left - margin.right,
         height = 200 - margin.top - margin.bottom;
 
+    if ($("#average-tci svg").length > 0)
+        $("#average-tci svg").remove();
+
     // append the svg object to the body of the page
     var svg = d3.select("#average-tci")
         .append("svg")

@@ -309,15 +309,30 @@ function onDateFilterUpdated(dateRange, isReset=false) {
         $("#filter-date .day.date-" + endDate).addClass("end-date");
     }
 
-    // 데이터 필터링
-    filteredData = data_city_tci_time.filter(item => {
+    // 시간 필터 데이터 필터링
+    const data_city_tci_time_filtered = data_city_tci_time.filter(item => {
         const date = moment(item.Time.split(" ")[0]);
         return date >= moment(startDate) && date <= moment(endDate);
     });
-
     // 시간 필터 렌더링
-    const data_city_tci_time_grouped = parseTimeSeasonality(filteredData);
+    const data_city_tci_time_grouped = parseTimeSeasonality(data_city_tci_time_filtered);
     renderTimeFilter(data_city_tci_time_grouped);
+
+    // Districts - Parallel Coordinates 데이터 필터링
+    const data_district_tci_time_filtered = JSON.parse(JSON.stringify(data_district_tci_time));
+    data_district_tci_time_filtered.forEach(item => {
+        for (datetime of Object.keys(item)) {
+            if (datetime === "name")
+                continue;
+
+            const date = moment(datetime.split(" ")[0]);
+            if (date < moment(startDate) || date > moment(endDate))
+                delete item[datetime];
+        }
+    });
+    // Districts - Parallel Coordinates 렌더링
+    const data_district_tci_time_grouped = parseTimeSeasonality(data_district_tci_time_filtered, 1);
+    renderParallelCoordinates(data_district_tci_time_grouped);
 }
 
 function onTimeFilterUpdated(timeRange, isReset=false) {
