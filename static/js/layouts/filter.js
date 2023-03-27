@@ -240,7 +240,7 @@ function renderTimeFilter(data) {
     // Add brush
     var brush = d3.brushX()
         .extent([[0, 0], [width, height]])
-        .on("brush", brushed);
+        .on("brush end", onBrush);
 
     svg.append("g")
         .attr("class", "brush")
@@ -250,7 +250,7 @@ function renderTimeFilter(data) {
 
     let prevTimeRange = [];
 
-    function brushed() {
+    function onBrush() {
         if (!d3.event.sourceEvent) return;
         const selection = d3.event.selection || x.range();
 
@@ -272,8 +272,9 @@ function renderTimeFilter(data) {
             svg.selectAll("rect").filter(d => !selectedRects.data().includes(d))
                 .attr("stroke", null).attr("stroke-width", null);
 
-            // 선택 바뀌었을 경우
-            if (prevTimeRange[0] != newTimeRange[0] && prevTimeRange.slice(-1)[0] != newTimeRange.slice(-1)[0]) {
+            // 선택 시간이 바뀌었을 경우
+            if ((prevTimeRange[0] != newTimeRange[0] || prevTimeRange.slice(-1)[0] != newTimeRange.slice(-1)[0])
+            && newTimeRange[0] != null && newTimeRange.slice(-1)[0] != null) {
                 prevTimeRange = newTimeRange.slice();
                 onTimeFilterUpdated(newTimeRange);
             }
@@ -287,6 +288,7 @@ function renderTimeFilter(data) {
 function onDateFilterUpdated(dateRange, isReset=false) {
     const startDate = dateRange[0];
     const endDate = dateRange.slice(-1)[0];
+    filterOptions['date_range'] = [startDate, endDate];
     
     let value = startDate + " ~ " + endDate;
     if (dateRange.length === 1)
@@ -335,6 +337,10 @@ function onDateFilterUpdated(dateRange, isReset=false) {
     renderParallelCoordinates(data_district_tci_time_grouped);
 }
 
-function onTimeFilterUpdated(timeRange, isReset=false) {
-    
+function onTimeFilterUpdated(timeRange) {
+    const startTime = timeRange[0];
+    const endTime = timeRange.slice(-1)[0];
+    filterOptions['time_range'] = [startTime, endTime];
+
+    renderDistrictList(filterOptions);
 }
