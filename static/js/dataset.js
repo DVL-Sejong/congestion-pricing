@@ -1,6 +1,12 @@
 let data_city_tci_date;
 let data_city_tci_time;
 let data_district_tci_time;
+let district_roads;
+
+const filterOptions = {
+    'date_range': [0, -1],
+    'time_range': [0, 24],
+};
 
 $(document).ready(function() {
     d3.csv("/static/data/sanfrancisco/city_tci_date.csv", data => {
@@ -19,6 +25,12 @@ $(document).ready(function() {
         const data_district_tci_time_grouped = parseTimeSeasonality(data_district_tci_time, 1);
         renderParallelCoordinates(data_district_tci_time_grouped);
     });
+
+    d3.json("/data/districts/road_list", data => {
+        district_roads = data;
+    });
+
+    renderDistrictList(filterOptions);
 });
 
 function parseTimeSeasonality(data_, axis=0) {

@@ -74,4 +74,50 @@ function renderParallelCoordinates(data) {
         .style("fill", "none")
         .style("stroke", "deepskyblue")
         .style("opacity", 1);
+    
+    const brush = d3.brushX()
+        .extent([[0, 0], [width, height]])
+        // .on("brush", brushed);
+    
+    const brushobj = svg.append("g")
+        .attr("class", "brush")
+        .call(brush)
+    brushobj
+        .select(".selection")
+        .attr("opacity", "0.5");
+    brushobj
+        .selectAll(".handle")
+        .remove();
+}
+
+function highlightTimeRangeToParallelCoordinates(timeRange) {
+    
+}
+
+function renderDistrictList(filterOptions) {
+    const params = {
+        'date_range': filterOptions['date_range'],
+        'time_range': filterOptions['time_range'],
+    };
+    d3.json("/data/districts/status")
+        .header("Content-Type", "application/json")
+        .post(JSON.stringify(params), data => {
+            // 현재 필터 설정과 같지 않은 경우 무시
+            if (JSON.stringify(data['date_range']) != JSON.stringify(filterOptions['date_range'])
+            || JSON.stringify(data['time_range']) != JSON.stringify(filterOptions['time_range']))
+                return;
+
+            $("#district-list-body tr").not("#district-list-template").remove();
+            for (let district of Object.keys(data['tci'])) {
+                const $row = $("#district-list-template").clone().removeAttr("id");
+                const tci = data['tci'][district].toFixed(2);
+                const crr = (data['crr'][district] * 100.0).toFixed(0);
+
+                $row.find(".name").text(district);
+                $row.find(".tci").text(tci);
+                $row.find(".congestion-road-rate-bar").css("width", `${crr}%`);
+                $row.find(".congestion-road-rate-num").text(`${crr}%`);
+                $row.removeClass("hidden").appendTo("#district-list-body");
+            }
+        });
 }
