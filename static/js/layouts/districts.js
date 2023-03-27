@@ -1,8 +1,6 @@
-d3.csv("/data/congestion/roads/0", renderParallelCoordinates);
-
 function renderParallelCoordinates(data) {
     // set the dimensions and margins of the graph
-    var margin = { top: 5, right: 10, bottom: 17, left: 25 },
+    var margin = { top: 5, right: 10, bottom: 17, left: 30 },
         width = 480 - margin.left - margin.right,
         height = 200 - margin.top - margin.bottom;
 
@@ -16,7 +14,7 @@ function renderParallelCoordinates(data) {
             "translate(" + margin.left + "," + margin.top + ")");
 
     // Extract the list of dimensions we want to keep in the plot. Here I keep all except the column called Species
-    dimensions = d3.keys(data[0]).filter(function (d) { return d != "road_id" })
+    dimensions = d3.keys(data[0]).filter(function (d) { return d != "name" })
 
     // For each dimension, I build a linear scale. I store all in a y object
     const min = d3.min(dimensions, i => d3.min(data, d => +d[i]));
@@ -72,5 +70,5 @@ function renderParallelCoordinates(data) {
         .attr("d", path)
         .style("fill", "none")
         .style("stroke", "deepskyblue")
-        .style("opacity", 0.5);
+        .style("opacity", 1);
 }
