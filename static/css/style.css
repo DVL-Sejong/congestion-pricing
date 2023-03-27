@@ -252,6 +252,9 @@ hr {
 .districts .district-list tr > td:nth-child(n+2) {
     border-left: 1px solid #aaa;
 }
+.districts .district-list .district-list-body > tr {
+    cursor: pointer;
+}
 .districts .district-list .district-list-body > tr > td:nth-child(2) {
     width: 50px;
 }

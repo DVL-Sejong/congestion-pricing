@@ -107,6 +107,7 @@ function renderDistrictList(filterOptions) {
             || JSON.stringify(data['time_range']) != JSON.stringify(filterOptions['time_range']))
                 return;
 
+            // District List 렌더링
             $("#district-list-body tr").not("#district-list-template").remove();
             for (let district of Object.keys(data['tci'])) {
                 const $row = $("#district-list-template").clone().removeAttr("id");
@@ -118,6 +119,9 @@ function renderDistrictList(filterOptions) {
                 $row.find(".congestion-road-rate-bar").css("width", `${crr}%`);
                 $row.find(".congestion-road-rate-num").text(`${crr}%`);
                 $row.removeClass("hidden").appendTo("#district-list-body");
+
+                // 클릭 시 인스펙터 열기
+                $row.on("click", () => $("#inspector").trigger("open", [district]));
             }
         });
 }
