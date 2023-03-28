@@ -288,7 +288,7 @@ hr {
 .inspector {
     position: fixed;
     left: 50%;
-    width: fit-content;
+    width: 400px;
     margin: 0 auto;
 }
 .inspector .panel-row {
@@ -296,17 +296,20 @@ hr {
 }
 .inspector .pricing-cost-wrapper {
     display: grid;
-    grid-template-columns: auto auto;
-    grid-gap: .5em;
+    grid-template-columns: auto 340px;
 }
 .inspector .pricing-cost {
-    width: 100%;
+    width: calc(100% - 55px - 5px - 4px); /* 그래프 Bar Rect의 Padding에 맞추기 위해 4px 더 들어감 */
+    margin-left: 54px;
+    margin-right: 5px;
+    color: white;
 }
 .inspector .pricing-cost-ticks {
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: calc(100% - 50px - 5px - 4px);
     margin-top: -.7em;
+    margin-left: 54px;
     font-size: .7em;
 }
 .inspector .pricing-cost-ticks .tick {

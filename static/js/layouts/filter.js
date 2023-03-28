@@ -186,10 +186,12 @@ function renderDateFilter(data) {
     }
 
     function onMouseUp(e) {
-        onDateFilterUpdated(filterOptions['date_range'], false, true);
-        isMouseDown = false;
-        selectStartDate = null;
-        selectEndDate = null;
+        if (isMouseDown) {
+            onDateFilterUpdated(filterOptions['date_range'], false, true);
+            isMouseDown = false;
+            selectStartDate = null;
+            selectEndDate = null;
+        }
     }
 }
 
