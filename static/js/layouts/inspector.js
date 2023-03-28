@@ -55,13 +55,38 @@ $(document).ready(function() {
 
         // Pricing Cost 별 교통 정체 시각화
         renderPricingDelay();
+
+        // 해당 District를 중앙에 두도록 지도를 이동
+        map.panTo(new L.LatLng(district_center[district_name][1], district_center[district_name][0]));
+
+        // 폴리곤 강조
+        $inspector.trigger("reset");
+        const layer = districtLayer._layers[district_layers[district_name]];
+        layer.setStyle({
+            fillOpacity: 0.1,
+        });
+        layer['inspector_opened'] = true;
+        $inspector.data("current_layer", district_layers[district_name]);
     });
 
     $inspector.on("close", function() {
         $(this).addClass("hidden");
+        $inspector.trigger("reset");
     });
     $inspector.find(".button.close").on("click", function() {
         $inspector.trigger("close");
+    })
+
+    $inspector.on("reset", function() {
+        // 폴리곤 강조 해제
+        if ($inspector.data("current_layer")) {
+            const layer = districtLayer._layers[$inspector.data("current_layer")];
+            layer.setStyle({
+                fillOpacity: 0,
+            });
+            layer['inspector_opened'] = false;
+            $inspector.removeData("current_layer")
+        }
     })
 });
 

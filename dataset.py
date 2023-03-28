@@ -1,8 +1,9 @@
 import os
-import csv, json
+import json
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from shapely.geometry import MultiPolygon, shape
 
 class Dataset():
     def __init__(self):
@@ -26,6 +27,10 @@ class Dataset():
             "district_tci_time_transposed": "static/data/sanfrancisco/district_tci_time_transposed.csv",
         }
 
+        # 데이터셋 로드
+        with open(self._file_names['districts']) as file:
+            geodata = json.load(file)
+
         # FFS 데이터 로드
         self._ffs_df = pd.read_csv(self._file_names['ffs'])
 
@@ -34,8 +39,6 @@ class Dataset():
         self._road_tci_time_df['Time'] = pd.to_datetime(self._road_tci_time_df['Time'])
 
         # District 이름 리스트
-        with open(self._file_names['districts']) as file:
-            geodata = json.load(file)
         self.district_list = [feature['properties']['nhood'] for feature in geodata['features']]
 
         # District 하위 도로의 리스트
@@ -46,11 +49,23 @@ class Dataset():
                 continue
             self.district_roads[district] = pd.read_csv(self._file_names['district_road_map'] % filename, dtype={'Road': str})['Road'].tolist()
 
-        # 날짜, 시간에 대해 초기값으로 전체 범위 적용
+        # District 폴리곤들의 중심 좌표 리스트
+        self.center_coords = {}
+        for feature in geodata['features']:
+            self.center_coords[feature['properties']['nhood']] = self.__get_center_coords(feature)
+
+        # 날짜, 시간 필터의 초기값으로 전체 범위 적용
         self._start_date = min(self._road_tci_time_df.loc[:, 'Time'])
         self._end_date = max(self._road_tci_time_df.loc[:, 'Time'])
         self._start_time = 0
         self._end_time = 24
+    
+    def __get_center_coords(self, feature: dict):
+        geom = shape(feature['geometry'])
+        if isinstance(geom, MultiPolygon):
+            center = geom.centroid
+            return (center.x, center.y)
+        raise(ValueError)
 
     def _filter(self, df: pd.DataFrame, date_only=False):
         field = 'Date' if 'Date' in df.columns else 'Time' # 필터링할 필드

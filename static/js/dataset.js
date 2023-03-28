@@ -2,6 +2,8 @@ let data_city_tci_date;
 let data_city_tci_time;
 let data_district_tci_time;
 let district_roads;
+let district_center;
+let district_layers = {};
 
 const filterOptions = {
     'date_range': [0, -1],
@@ -28,6 +30,10 @@ $(document).ready(function() {
 
     d3.json("/data/districts/road_list", data => {
         district_roads = data;
+    });
+
+    d3.json("/data/districts/center_coords", data => {
+        district_center = data;
     });
 
     renderDistrictList(filterOptions);

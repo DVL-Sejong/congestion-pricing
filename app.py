@@ -20,6 +20,10 @@ def data_congestion_roads():
 def data_districts_road_list():
     return dataset.district_roads
 
+@app.route('/data/districts/center_coords')
+def data_districts_center_coords():
+    return dataset.center_coords
+
 @app.route('/data/districts/status', methods=['POST'])
 def data_districts_status():
     params = request.get_json()
