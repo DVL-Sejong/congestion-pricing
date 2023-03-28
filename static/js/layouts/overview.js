@@ -18,6 +18,9 @@ function renderRoadNetworkCongestion(data) {
         width = 425 - margin.left - margin.right,
         height = 175 - margin.top - margin.bottom;
 
+    if ($("#no-congestion svg").length > 0)
+        $("#no-congestion svg").remove();
+
     // append the svg object to the body of the page
     var svg = d3.select("#no-congestion")
         .append("svg")
@@ -61,6 +64,9 @@ function renderNetworkTCI(data) {
     var margin = { top: 5, right: 5, bottom: 17, left: 30 },
         width = 425 - margin.left - margin.right,
         height = 175 - margin.top - margin.bottom;
+    
+    if ($("#network-tci svg").length > 0)
+        $("#network-tci svg").remove();
 
     // append the svg object to the body of the page
     var svg = d3.select("#network-tci")

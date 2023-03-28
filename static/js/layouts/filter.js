@@ -351,4 +351,5 @@ function onTimeFilterUpdated(timeRange) {
     filterOptions['time_range'] = [startTime, endTime];
 
     renderDistrictList(filterOptions);
+    renderOverview(filterOptions);
 }
