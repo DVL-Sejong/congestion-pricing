@@ -246,7 +246,7 @@ function renderTimeFilter(data) {
         .attr("class", "brush")
         .call(brush)
         .select(".selection")
-        .attr("opacity", "0");
+        .attr("opacity", "0.4");
 
     let prevTimeRange = [];
 
@@ -256,21 +256,29 @@ function renderTimeFilter(data) {
 
         if (selection) {
             const newTimeRange = [];
+
             x.domain().forEach(function(d) {
                 const pos = x(d) + x.bandwidth() / 2;
                 if (pos > selection[0] && pos < selection[1]) {
                     newTimeRange.push(d);
                 }
             });
-            const selectedRects = svg.selectAll("rect")
-                .filter(d => d.Time >= newTimeRange[0] && d.Time <= newTimeRange.slice(-1)[0]);
+            
+            if (newTimeRange[0] === 0 && newTimeRange.slice(-1)[0] === 23) {
+                // 전체 영역을 선택한 경우 혹은 브러시를 초기화한 경우 모든 bar의 테두리 제거
+                svg.selectAll("rect")
+                    .attr("stroke", null).attr("stroke-width", null);
+            } else {
+                const selectedRects = svg.selectAll("rect")
+                    .filter(d => d.Time >= newTimeRange[0] && d.Time <= newTimeRange.slice(-1)[0]);
 
-            // 선택 영역의 bar들에 테두리 적용
-            selectedRects.attr("stroke", "coral").attr("stroke-width", 2);
+                // 선택 영역의 bar들에 테두리 적용
+                selectedRects.attr("stroke", "coral").attr("stroke-width", 2);
 
-            // 선택하지 않은 영역의 bar들에 테두리 제거
-            svg.selectAll("rect").filter(d => !selectedRects.data().includes(d))
-                .attr("stroke", null).attr("stroke-width", null);
+                // 선택하지 않은 영역의 bar들에 테두리 제거
+                svg.selectAll("rect").filter(d => !selectedRects.data().includes(d))
+                    .attr("stroke", null).attr("stroke-width", null);
+            }
 
             // 선택 시간이 바뀌었을 경우
             if ((prevTimeRange[0] != newTimeRange[0] || prevTimeRange.slice(-1)[0] != newTimeRange.slice(-1)[0])
