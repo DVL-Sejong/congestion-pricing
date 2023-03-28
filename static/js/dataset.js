@@ -31,6 +31,8 @@ $(document).ready(function() {
     });
 
     renderDistrictList(filterOptions);
+
+    renderOverview(filterOptions);
 });
 
 function parseTimeSeasonality(data_, axis=0) {

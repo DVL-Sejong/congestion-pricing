@@ -1,12 +1,17 @@
-d3.csv("/static/data/connum.csv", renderRoadNetworkCongestion);
-renderNetworkTCI([
-    {"Date": 10, "actual": 0.73},
-    {"Date": 11, "actual": 0.73},
-    {"Date": 12, "actual": 0.70},
-    {"Date": 13, "actual": 0.67},
-    {"Date": 14, "actual": 0.71},
-    {"Date": 15, "actual": 0.71},
-]);
+function renderOverview(filterOptions) {
+    d3.json("/data/overview/status")
+        .header("Content-Type", "application/json")
+        .post(JSON.stringify(filterOptions), data => {
+            // 현재 필터 설정과 같지 않은 경우 무시
+            if (JSON.stringify(data['date_range']) != JSON.stringify(filterOptions['date_range'])
+            || JSON.stringify(data['time_range']) != JSON.stringify(filterOptions['time_range']))
+                return;
+            
+            // 시각화 렌더링
+            renderRoadNetworkCongestion(data['nornn']);
+            renderNetworkTCI(data['tci']);
+        });
+}
 
 function renderRoadNetworkCongestion(data) {
     var margin = { top: 5, right: 5, bottom: 17, left: 30 },
@@ -26,7 +31,7 @@ function renderRoadNetworkCongestion(data) {
     var x = d3.scaleBand()
         .range([0, width])
         .padding(0.2)
-        .domain(data.map(function (d) { return d.Date; }));
+        .domain(Object.keys(data).map(d => +d));
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x))
@@ -34,7 +39,7 @@ function renderRoadNetworkCongestion(data) {
 
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain([0, d3.max(data, function (d) { return +d.actual; })])
+        .domain([0, d3.max(Object.values(data), d => +d)])
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y))
@@ -42,13 +47,13 @@ function renderRoadNetworkCongestion(data) {
 
     // Add bars
     svg.selectAll("rect")
-        .data(data)
+        .data(Object.keys(data))
         .enter()
         .append("rect")
-        .attr("x", function (d) { return x(d.Date); })
-        .attr("y", function (d) { return y(d.actual); })
+        .attr("x", d => x(d))
+        .attr("y", d => y(data[d]))
         .attr("width", x.bandwidth())
-        .attr("height", function (d) { return height - y(d.actual); })
+        .attr("height", d => height - y(data[d]))
         .attr("fill", "deepskyblue");
 }
 
@@ -68,7 +73,7 @@ function renderNetworkTCI(data) {
 
     // Add X axis
     var x = d3.scaleLinear()
-        .domain(d3.extent(data, function (d) { return d.Date; }))
+        .domain(d3.extent(Object.keys(data), d => +d))
         .range([0, width]);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -77,7 +82,7 @@ function renderNetworkTCI(data) {
 
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain(d3.extent(data, function (d) { return +d.actual; }))
+        .domain(d3.extent(Object.values(data), d => +d))
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y).tickFormat(d3.format(",.2f")))
@@ -85,12 +90,12 @@ function renderNetworkTCI(data) {
 
     // Add the line
     svg.append("path")
-        .datum(data)
+        .datum(Object.keys(data))
         .attr("fill", "none")
         .attr("stroke", "deepskyblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-            .x(function (d) { return x(d.Date) })
-            .y(function (d) { return y(d.actual) })
+            .x(d => x(d))
+            .y(d => y(data[d]))
         );
 }

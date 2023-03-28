@@ -52,10 +52,11 @@ class Dataset():
         self._start_time = 0
         self._end_time = 24
 
-    def _filter(self, df: pd.DataFrame):
+    def _filter(self, df: pd.DataFrame, date_only=False):
         field = 'Date' if 'Date' in df.columns else 'Time' # 필터링할 필드
         filtered = df[(df[field] >= self._start_date) & (df[field] <= self._end_date)] # 날짜 필터
-        filtered = df[(df[field].dt.hour >= self._start_time) & (df[field].dt.hour <= self._end_time)] # 시간 필터
+        if not date_only:
+            filtered = df[(df[field].dt.hour >= self._start_time) & (df[field].dt.hour <= self._end_time)] # 시간 필터
         return filtered
 
     def set_date_filter(self, start_date: str, end_date: str):
@@ -83,10 +84,27 @@ class Dataset():
         for district in self.district_roads.keys():
             # 조건 시간대의 TCI 평균 계산
             status['tci'][district] = road_tci_time_df[self.district_roads[district]].sum().sum() / road_tci_time_df[self.district_roads[district]].count().sum()
-            # 조건 시간대 안에서 한 번이라도 혼잡 상태에 해당한 도로들은 모두 혼잡 도로로 분류
+            # 조건 시간대 안에서 한 번이라도 혼잡 상태에 해당한 도로들은 모두 혼잡 도로로 카운트
             for road in self.district_roads[district]:
                 if min_series[road] <= self._congestion_tci:
                     status['crr'][district] += 1
             status['crr'][district] /= len(self.district_roads[district])
+
+        return status
+
+    def get_overview_status(self):
+        road_tci_time_df = self._filter(self._road_tci_time_df, date_only=True) # 날짜 필터 적용
+        status = {
+            'tci': {x: np.nan for x in range(0, 24)},
+            'nornn': {x: 0 for x in range(0, 24)},
+        }
+
+        # 시간 단위 평균 TCI
+        road_tci_time_df['Hour'] = road_tci_time_df['Time'].dt.hour
+        road_tci_time_df = road_tci_time_df.groupby('Hour').mean(numeric_only=True)
+        status['tci'] = road_tci_time_df.mean(axis=1).to_dict()
+
+        # 혼잡 도로 카운트
+        status['nornn'] = road_tci_time_df.applymap(lambda x: 1 if x <= self._congestion_tci else 0).sum(axis=1).to_dict()
 
         return status
