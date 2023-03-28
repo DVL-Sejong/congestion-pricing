@@ -186,6 +186,7 @@ function renderDateFilter(data) {
     }
 
     function onMouseUp(e) {
+        onDateFilterUpdated(filterOptions['date_range'], false, true);
         isMouseDown = false;
         selectStartDate = null;
         selectEndDate = null;
@@ -240,7 +241,8 @@ function renderTimeFilter(data) {
     // Add brush
     var brush = d3.brushX()
         .extent([[0, 0], [width, height]])
-        .on("brush end", onBrush);
+        .on("brush", onBrush)
+        .on("end", onBrushEnd);
 
     svg.append("g")
         .attr("class", "brush")
@@ -279,6 +281,25 @@ function renderTimeFilter(data) {
                 svg.selectAll("rect").filter(d => !selectedRects.data().includes(d))
                     .attr("stroke", null).attr("stroke-width", null);
             }
+        } else {
+            svg.selectAll("rect").attr("stroke", null).attr("stroke-width", null);
+            prevTimeRange = [];
+        }
+    }
+
+    function onBrushEnd() {
+        if (!d3.event.sourceEvent) return;
+        const selection = d3.event.selection || x.range();
+
+        if (selection) {
+            const newTimeRange = [];
+
+            x.domain().forEach(function(d) {
+                const pos = x(d) + x.bandwidth() / 2;
+                if (pos > selection[0] && pos < selection[1]) {
+                    newTimeRange.push(d);
+                }
+            });
 
             // 선택 시간이 바뀌었을 경우
             if ((prevTimeRange[0] != newTimeRange[0] || prevTimeRange.slice(-1)[0] != newTimeRange.slice(-1)[0])
@@ -287,13 +308,12 @@ function renderTimeFilter(data) {
                 onTimeFilterUpdated(newTimeRange);
             }
         } else {
-            svg.selectAll("rect").attr("stroke", null).attr("stroke-width", null);
             prevTimeRange = [];
         }
     }
 }
 
-function onDateFilterUpdated(dateRange, isReset=false) {
+function onDateFilterUpdated(dateRange, isReset=false, isEnd=false) {
     const startDate = dateRange[0];
     const endDate = dateRange.slice(-1)[0];
     filterOptions['date_range'] = [startDate, endDate];
@@ -311,38 +331,43 @@ function onDateFilterUpdated(dateRange, isReset=false) {
     }
 
     // 선택 기간 시각화
-    $("#filter-date .day").removeClass("selected").removeClass("start-date").removeClass("end-date");
-    if (!isReset) {
-        for (dateString of dateRange)
-            $("#filter-date .day.date-" + dateString).addClass("selected");
-        $("#filter-date .day.date-" + startDate).addClass("start-date");
-        $("#filter-date .day.date-" + endDate).addClass("end-date");
+    if (!isEnd) {
+        $("#filter-date .day").removeClass("selected").removeClass("start-date").removeClass("end-date");
+        if (!isReset) {
+            for (dateString of dateRange)
+                $("#filter-date .day.date-" + dateString).addClass("selected");
+            $("#filter-date .day.date-" + startDate).addClass("start-date");
+            $("#filter-date .day.date-" + endDate).addClass("end-date");
+        }
     }
 
     // 시간 필터 데이터 필터링
-    const data_city_tci_time_filtered = data_city_tci_time.filter(item => {
-        const date = moment(item.Time.split(" ")[0]);
-        return date >= moment(startDate) && date <= moment(endDate);
-    });
-    // 시간 필터 렌더링
-    const data_city_tci_time_grouped = parseTimeSeasonality(data_city_tci_time_filtered);
-    renderTimeFilter(data_city_tci_time_grouped);
+    if (isEnd) {
+        const data_city_tci_time_filtered = data_city_tci_time.filter(item => {
+            const date = moment(item.Time.split(" ")[0]);
+            return date >= moment(startDate) && date <= moment(endDate);
+        });
+        // 시간 필터 렌더링
+        const data_city_tci_time_grouped = parseTimeSeasonality(data_city_tci_time_filtered);
+        renderTimeFilter(data_city_tci_time_grouped);
+        onTimeFilterUpdated([0, 23]);
 
-    // Districts - Parallel Coordinates 데이터 필터링
-    const data_district_tci_time_filtered = JSON.parse(JSON.stringify(data_district_tci_time));
-    data_district_tci_time_filtered.forEach(item => {
-        for (datetime of Object.keys(item)) {
-            if (datetime === "name")
-                continue;
+        // Districts - Parallel Coordinates 데이터 필터링
+        const data_district_tci_time_filtered = JSON.parse(JSON.stringify(data_district_tci_time));
+        data_district_tci_time_filtered.forEach(item => {
+            for (datetime of Object.keys(item)) {
+                if (datetime === "name")
+                    continue;
 
-            const date = moment(datetime.split(" ")[0]);
-            if (date < moment(startDate) || date > moment(endDate))
-                delete item[datetime];
-        }
-    });
-    // Districts - Parallel Coordinates 렌더링
-    const data_district_tci_time_grouped = parseTimeSeasonality(data_district_tci_time_filtered, 1);
-    renderParallelCoordinates(data_district_tci_time_grouped);
+                const date = moment(datetime.split(" ")[0]);
+                if (date < moment(startDate) || date > moment(endDate))
+                    delete item[datetime];
+            }
+        });
+        // Districts - Parallel Coordinates 렌더링
+        const data_district_tci_time_grouped = parseTimeSeasonality(data_district_tci_time_filtered, 1);
+        renderParallelCoordinates(data_district_tci_time_grouped);
+    }
 }
 
 function onTimeFilterUpdated(timeRange) {
