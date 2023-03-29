@@ -301,9 +301,15 @@ hr {
 .inspector .panel-row {
     margin-bottom: 5px;
 }
+.inspector .panel-row:last-child {
+    margin-bottom: 0;
+}
 .inspector .pricing-cost-wrapper {
     display: grid;
     grid-template-columns: auto 340px;
+}
+.inspector .pricing-delay {
+    height: 175px;
 }
 .inspector .pricing-cost {
     width: calc(100% - 55px - 5px - 4px); /* 그래프 Bar Rect의 Padding에 맞추기 위해 4px 더 들어감 */

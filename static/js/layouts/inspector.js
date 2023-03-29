@@ -38,14 +38,6 @@ $(document).ready(function() {
     })
 
     $inspector.on("open", function(e, district_name) {
-        // Inspector 모달 위치 조정
-        const width = $(this).width();
-        const height = $(this).height();
-        $(this)
-            .css("left", `calc(50% - ${width/2}px`)
-            .css("top", `calc(50% - ${height}px)`)
-            .removeClass("hidden");
-        
         // 모달 내부의 District Name 설정
         if (district_name) {
             $("#district-name").text(district_name);
@@ -67,6 +59,14 @@ $(document).ready(function() {
         });
         layer['inspector_opened'] = true;
         $inspector.data("current_layer", district_layers[district_name]);
+        
+        // Inspector 모달 위치 조정하고 열기
+        const width = $(this).width();
+        const height = $(this).height();
+        $(this)
+            .css("left", `calc(50% - ${width/2}px`)
+            .css("top", `calc(50% - ${height}px)`)
+            .removeClass("hidden");
     });
 
     $inspector.on("close", function() {
@@ -153,6 +153,7 @@ function renderPricingDelay() {
         d3.select("#pricing-cost")
             .attr("min", 0)
             .attr("max", data.length-1)
+            .attr("value", 0)
             .attr("step", 1);
 
         // Add range input datalist
