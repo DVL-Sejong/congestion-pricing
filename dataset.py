@@ -90,9 +90,10 @@ class Dataset():
     
     def get_districts_status(self):
         road_tci_time_df = self._filter(self._road_tci_time_df) # 날짜, 시간 필터 적용
-        status = {
+        status = { # 초기화
             'tci': {x: np.nan for x in self.district_roads.keys()},
             'crr': {x: 0 for x in self.district_roads.keys()},
+            'sorted': list(self.district_roads.keys()),
         }
 
         min_series = road_tci_time_df.min()
@@ -105,11 +106,15 @@ class Dataset():
                     status['crr'][district] += 1
             status['crr'][district] /= len(self.district_roads[district])
 
+        # 혼잡 도로순 정렬
+        status['sorted'] = sorted(status['sorted'], key=lambda x: status['crr'][x], reverse=True) # 내림차순
+        status['sorted'] = sorted(status['sorted'], key=lambda x: round(status['tci'][x], 2)) # 오름차순
+
         return status
 
     def get_overview_status(self):
         road_tci_time_df = self._filter(self._road_tci_time_df, date_only=True) # 날짜 필터 적용
-        status = {
+        status = { # 초기화
             'tci': {x: np.nan for x in range(0, 24)},
             'nornn': {x: 0 for x in range(0, 24)},
         }

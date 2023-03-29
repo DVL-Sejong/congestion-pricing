@@ -109,7 +109,7 @@ function renderDistrictList(filterOptions) {
 
             // District List 렌더링
             $("#district-list-body tr").not("#district-list-template").remove();
-            for (let district of Object.keys(data['tci'])) {
+            for (let district of data['sorted']) {
                 const $row = $("#district-list-template").clone().removeAttr("id");
                 const tci = data['tci'][district].toFixed(2);
                 const crr = (data['crr'][district] * 100.0).toFixed(0);
