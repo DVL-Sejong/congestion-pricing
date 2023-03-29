@@ -14,7 +14,7 @@ var map = L.mapbox.map('map', null, { renderer: L.canvas() })
     .setView([37.7938262, -122.41103158], 15)
     .addLayer(L.mapbox.styleLayer(mapStyle));
 
-map.legendControl.addLegend(document.getElementById('legend').innerHTML);
+// map.legendControl.addLegend(document.getElementById('legend').innerHTML);
 var featureGroup = L.featureGroup().addTo(map);
 var drawControl = new L.Control.Draw({
     edit: {

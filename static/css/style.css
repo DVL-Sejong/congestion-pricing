@@ -51,16 +51,6 @@ hr {
 .map .leaflet-top.leaflet-left {
     left: 410px;
 }
-.legend label,
-.legend span {
-    display: block;
-    float: left;
-    height: 15px;
-    width: 20%;
-    text-align: center;
-    font-size: 9px;
-    color: #808080;
-}
 .open-inspector {
     position: absolute;
     transform: translate(calc(-100% + 2px), calc(-100% - 5px));
@@ -201,6 +191,23 @@ hr {
 }
 .filter .filter-period {
     text-align: center;
+}
+
+.map-legend {
+    text-align: center;
+}
+.map-legend .legend {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    line-height: .9em;
+    font-size: .7em;
+    color: #808080;
+    list-style: none;
+}
+.map-legend .legend > li {
+    display: grid;
+    align-content: center;
+    height: 50px;
 }
 
 .overview {
