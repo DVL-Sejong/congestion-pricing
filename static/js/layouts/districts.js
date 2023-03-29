@@ -115,7 +115,11 @@ function renderDistrictList(filterOptions) {
                 const crr = (data['crr'][district] * 100.0).toFixed(0);
 
                 $row.find(".name").text(district);
-                $row.find(".tci").text(tci);
+                $row.find(".tci").text(tci)
+                    .css({
+                        backgroundColor: getTCIColor(tci),
+                        color: getTCITextColor(tci),
+                    });
                 $row.find(".congestion-road-rate-bar").css("width", `${crr}%`);
                 $row.find(".congestion-road-rate-num").text(`${crr}%`);
                 $row.removeClass("hidden").appendTo("#district-list-body");

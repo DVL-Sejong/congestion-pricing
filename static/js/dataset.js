@@ -139,3 +139,16 @@ function getTCIColor(tci) {
     else if (tci > 0.0)
         return "#E74C3C";
 }
+
+function getTCITextColor(tci) {
+    if (tci > 0.8)
+        return "#555";
+    else if (tci > 0.6)
+        return "#555";
+    else if (tci > 0.4)
+        return "#FFF";
+    else if (tci > 0.2)
+        return "#FFF";
+    else if (tci > 0.0)
+        return "#FFF";
+}

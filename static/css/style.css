@@ -199,7 +199,7 @@ hr {
 .map-legend .legend {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    line-height: .9em;
+    line-height: 1em;
     font-size: .7em;
     color: #808080;
     list-style: none;
@@ -269,12 +269,9 @@ hr {
     width: 150px;
 }
 .districts .district-list .tci {
+    padding: 3px;
     text-align: center;
     color: white;
-}
-.districts .district-list .tci.red {
-    padding: 3px;
-    background-color: rgb(255, 50, 50);
     border-radius: 5px;
 }
 .districts .district-list .congestion-road-rate-bar {
