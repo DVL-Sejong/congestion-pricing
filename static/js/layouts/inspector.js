@@ -37,28 +37,34 @@ $(document).ready(function() {
         updateButtonPosition();
     })
 
-    $inspector.on("open", function(e, district_name) {
-        // 모달 내부의 District Name 설정
-        if (district_name) {
-            $("#district-name").text(district_name);
-        } else {
-            $("#district-name").text("Custom Area");
+    $inspector.on("open", function(e, districtName) {
+        // Inspector 내부에 District Name 설정
+        if (!districtName) {
+            districtName = "Custom Area";
+            district_policy[districtName] = JSON.parse(JSON.stringify(defaultPolicy));
         }
+        $("#district-name").text(districtName);
+
+        // Inspector에 혼잡세 정책 설정
+        const policy = district_policy[districtName];
+        $inspector.find("#pricing-scheme").val(policy['scheme']);
+        $inspector.find("#pricing-cost").val(policy['cost']);
 
         // Pricing Cost 별 교통 정체 시각화
         renderPricingDelay();
 
         // 해당 District를 중앙에 두도록 지도를 이동
-        map.panTo(new L.LatLng(district_center[district_name][1], district_center[district_name][0]));
+        map.panTo(new L.LatLng(district_center[districtName][1], district_center[districtName][0]));
 
         // 폴리곤 강조
         $inspector.trigger("reset");
-        const layer = districtLayer._layers[district_layers[district_name]];
-        layer.setStyle({
-            fillOpacity: 0.1,
-        });
+        const layer = districtLayer._layers[district_layers[districtName]];
+        layer.setStyle(districtLayerSelectedStyle);
         layer['inspector_opened'] = true;
-        $inspector.data("current_layer", district_layers[district_name]);
+
+        // 컨텍스트 저장
+        $inspector.data("current_district", districtName);
+        $inspector.data("current_layer", district_layers[districtName]);
         
         // Inspector 모달 위치 조정하고 열기
         const width = $(this).width();
@@ -75,19 +81,35 @@ $(document).ready(function() {
     });
     $inspector.find(".button.close").on("click", function() {
         $inspector.trigger("close");
-    })
+    });
 
     $inspector.on("reset", function() {
-        // 폴리곤 강조 해제
         if ($inspector.data("current_layer")) {
+            // 폴리곤 강조 해제
             const layer = districtLayer._layers[$inspector.data("current_layer")];
-            layer.setStyle({
-                fillOpacity: 0,
-            });
+            layer.setStyle(districtLayerDefaultStyle);
             layer['inspector_opened'] = false;
-            $inspector.removeData("current_layer")
+
+            // 컨텍스트 삭제
+            $inspector.removeData("current_district")
+            $inspector.removeData("current_layer");
         }
-    })
+    });
+
+    // Pricing Scheme 설정 시
+    $inspector.find("#pricing-scheme").on("input", function(e) {
+        const districtName = $inspector.data("current_district");
+        if (districtName) {
+            district_policy[districtName]['scheme'] = $(this).val();
+        }
+    });
+    // Pricing Cost 조정 시
+    $inspector.find("#pricing-cost").on("input", function(e) {
+        const districtName = $inspector.data("current_district");
+        if (districtName) {
+            district_policy[districtName]['cost'] = $(this).val();
+        }
+    });
 });
 
 function renderPricingDelay() {

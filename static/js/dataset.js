@@ -1,10 +1,18 @@
-let data_city_tci_date;
-let data_city_tci_time;
-let data_district_tci_time;
-let district_roads;
-let district_center;
-let district_layers = {};
+let data_city_tci_date; // 도시 전체의 날짜별 TCI
+let data_city_tci_time; // 도시 전체의 날짜&시간별 TCI
+let data_district_tci_time; // 하위 행정구역들의 날짜&시간별 TCI
+let district_roads; // 하위 행정구역에 존재하는 도로들
+let district_center; // 하위 행정구역들의 폴리곤 무게중심
+let district_layers; // 하위 행정구역들의 폴리곤 레이어
+let district_policy; // 하위 행정구역별로 적용된 혼잡세 정책
 
+// 기본 혼잡세 정책
+const defaultPolicy = {
+    'scheme': 'jddt', // Zonal based
+    'cost': 0, // 부과하지 않음
+};
+
+// 필터 옵션들
 const filterOptions = {
     'date_range': [0, -1],
     'time_range': [0, 24],
