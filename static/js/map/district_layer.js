@@ -5,9 +5,12 @@ const districtLayerDefaultStyle = { // 기본 스타일
     fillOpacity: 0.1,
 };
 const districtLayerMouseOverStyle = { // 마우스 오버 시 스타일
+    color: "#aaa",
+    weight: 1,
     fillOpacity: 0,
 };
 const districtLayerSelectedStyle = { // 선택했을 때 스타일
+    color: "#aaa",
     weight: 2,
     fillOpacity: 0,
 };
