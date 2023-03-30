@@ -1,15 +1,14 @@
 // 행정구역 레이어 스타일 정의
 const districtLayerDefaultStyle = { // 기본 스타일
-    color: "color(srgb 0.5818 0.6931 0.895)",
-    weight: 2,
-    fillOpacity: 0,
-};
-const districtLayerMouseOverStyle = { // 마우스 오버 시 스타일
+    color: "#aaa",
+    weight: 1,
     fillOpacity: 0.1,
 };
+const districtLayerMouseOverStyle = { // 마우스 오버 시 스타일
+    fillOpacity: 0,
+};
 const districtLayerSelectedStyle = { // 선택했을 때 스타일
-    color: "color(srgb 0.58 0.63 0.9)",
-    weight: 5,
+    weight: 2,
     fillOpacity: 0,
 };
 const districtLayerPolicyStyle = cost => cost > 0 ? { // 혼잡세 적용 시 스타일
@@ -30,6 +29,7 @@ districtLayer.on("ready", function() {
         const districtName = districtLayer._layers[layerID].feature.properties['nhood'];
         district_layers[districtName] = layerID;
     }
+    console.log(district_layers);
 
     // 행정구역별 혼잡세 정책 초기화
     district_policy = {};

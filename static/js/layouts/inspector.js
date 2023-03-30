@@ -174,7 +174,7 @@ function renderPricingDelay() {
             .attr("y", d => y(d.TotalDelayTime))
             .attr("width", x.bandwidth())
             .attr("height", d => height - y(d.TotalDelayTime))
-            .attr("fill", "deepskyblue");
+            .attr("fill", "#777");
 
         // Set range input attributes
         d3.select("#pricing-cost")

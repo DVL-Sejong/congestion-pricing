@@ -85,7 +85,7 @@ function renderParallelCoordinates(data, filterOptions) {
         .enter().append("path")
         .attr("d", path)
         .style("fill", "none")
-        .style("stroke", "deepskyblue")
+        .style("stroke", "#777")
         .style("opacity", 1);
     // Draw lines when shown focused
     svg
@@ -97,7 +97,7 @@ function renderParallelCoordinates(data, filterOptions) {
         .attr("d", path)
         .style("display", "none")
         .style("fill", "none")
-        .style("stroke", "color(srgb 0.58 0.63 0.9)")
+        .style("stroke", "#333")
         .style("stroke-width", "2")
         .style("opacity", 1);
     
@@ -264,6 +264,12 @@ function focusDistrict(districtName) {
             if (toggle)
                 $(item).addClass("focused");
         }
+    } else {
+        // Inspector가 열려 있는 경우 강조 스타일
+        layer.setStyle({
+            ...districtLayerSelectedStyle,
+            ...districtLayerPolicyStyle(policy['cost']),
+        });
     }
 }
 

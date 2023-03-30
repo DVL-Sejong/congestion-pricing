@@ -57,7 +57,7 @@ function renderRoadNetworkCongestion(data, timeRange) {
         .attr("y", d => y(data[d]))
         .attr("width", x.bandwidth())
         .attr("height", d => height - y(data[d]))
-        .attr("fill", "deepskyblue");
+        .attr("fill", "#777");
     
     // 시각화 옵션 저장
     visualizationOptions['RoadNetworkCongestion'] = {
@@ -131,7 +131,7 @@ function renderNetworkTCI(data, timeRange) {
     svg.append("path")
         .datum(Object.keys(data))
         .attr("fill", "none")
-        .attr("stroke", "deepskyblue")
+        .attr("stroke", "#777")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(d => x(d))
