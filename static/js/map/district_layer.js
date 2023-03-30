@@ -12,7 +12,7 @@ const districtLayerSelectedStyle = { // 선택했을 때 스타일
     weight: 5,
     fillOpacity: 0,
 };
-const districtLayerPolicyStyle = cost => cost > 0 ? {
+const districtLayerPolicyStyle = cost => cost > 0 ? { // 혼잡세 적용 시 스타일
     color: "color(srgb 0.61 0.9 0.58)",
     fillOpacity: 0.1 + pricing_cost_list[cost] / max_pricing_cost * 0.4,
 } : {};

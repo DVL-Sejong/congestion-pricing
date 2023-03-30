@@ -74,22 +74,35 @@
             </div>
         </div>
         
-        <div class="panel map-legend">
-            <div class="panel-header">Congestion Indicator</div>
-            <ul class="legend clearfix">
-                <li style="background:#E74C3C; color: white;">
+        <div class="panel system-legend">
+            <div class="panel-header">Legend</div>
+            <!-- <ul class="legend policy">
+                <li style="background: linear-gradient(90deg, color(srgb 0.61 0.9 0.58 / 0.3) 10%, color(srgb 0.61 0.9 0.58 / 0.7) 90%); color: #555;">
+                    <span>Congestion Price</span>
+                </li>
+            </ul> -->
+            <ul class="legend context">
+                <li style="background: deepskyblue; color: white;">
+                    <span>Original</span>
+                </li>
+                <li style="background: mediumorchid; color: white;">
+                    <span>Predicted</span>
+                </li>
+            </ul>
+            <ul class="legend congestion">
+                <li style="background: #E74C3C; color: white;">
                     <span>0 &le;<br>Congested</span>
                 </li>
-                <li style="background:#EC7063; color: white;">
+                <li style="background: #EC7063; color: white;">
                     <span>&le; 0.4</span>
                 </li>
-                <li style="background:#F1948A; color: white;">
+                <li style="background: #F1948A; color: white;">
                     <span>&le; 0.6</span>
                 </li>
-                <li style="background:#FADBD8; color: #555;">
+                <li style="background: #FADBD8; color: #555;">
                     <span>&le; 0.8</span>
                 </li>
-                <li style="background:#FDEDEC; color: #555;">
+                <li style="background: #FDEDEC; color: #555;">
                     <span>&le; 1<br>Free</span>
                 </li>
             </ul>
@@ -100,22 +113,6 @@
         <div class="panel overview">
             <div class="panel-header">Overview</div>
             <div class="panel-body">
-                <div class="legend-wrapper">
-                    <!-- <div class="legend">
-                        <input id="toggle-goal" type="checkbox" />
-                        <label for="toggle-goal">Set Goal</label>
-                    </div> -->
-                    <div class="legend">
-                        <div>
-                            <div class="legend-color color original"></div>
-                            <div class="legend-name">Original</div>
-                        </div>
-                        <div>
-                            <div class="legend-color color predicted"></div>
-                            <div class="legend-name">Predicted</div>
-                        </div>
-                    </div>
-                </div>
                 <div>
                     <div class="visualization-title">No. of Road Network Congesion</div>
                     <div id="no-congestion" class="visualization no-congestion">

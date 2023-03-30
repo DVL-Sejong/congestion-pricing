@@ -193,18 +193,26 @@ hr {
     text-align: center;
 }
 
-.map-legend {
+.system-legend {
     text-align: center;
 }
-.map-legend .legend {
+.system-legend .legend {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
     line-height: 1em;
     font-size: .7em;
     color: #808080;
     list-style: none;
 }
-.map-legend .legend > li {
+.system-legend .legend.policy {
+    grid-template-columns: 1fr;    
+}
+.system-legend .legend.context {
+    grid-template-columns: repeat(2, 1fr);    
+}
+.system-legend .legend.congestion {
+    grid-template-columns: repeat(5, 1fr);
+}
+.system-legend .legend > li {
     display: grid;
     align-content: center;
     height: 50px;
@@ -216,7 +224,7 @@ hr {
 }
 .overview .panel-body {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(2, auto);
     gap: 10px;
     width: min-content;
     padding: 10px 15px;
