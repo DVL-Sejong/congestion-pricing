@@ -370,7 +370,7 @@ function onDateFilterUpdated(dateRange, isReset=false, isEnd=false) {
         });
         // Districts - Parallel Coordinates 렌더링
         const data_district_tci_time_grouped = parseTimeSeasonality(data_district_tci_time_filtered, 1);
-        renderParallelCoordinates(data_district_tci_time_grouped);
+        renderParallelCoordinates(data_district_tci_time_grouped, filterOptions);
     }
 }
 
