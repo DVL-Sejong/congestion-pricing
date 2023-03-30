@@ -8,12 +8,12 @@ function renderOverview(filterOptions) {
                 return;
             
             // 시각화 렌더링
-            renderRoadNetworkCongestion(data['nornn']);
-            renderNetworkTCI(data['tci']);
+            renderRoadNetworkCongestion(data['nornn'], filterOptions['time_range']);
+            renderNetworkTCI(data['tci'], filterOptions['time_range']);
         });
 }
 
-function renderRoadNetworkCongestion(data) {
+function renderRoadNetworkCongestion(data, timeRange) {
     var margin = { top: 5, right: 5, bottom: 17, left: 30 },
         width = 425 - margin.left - margin.right,
         height = 175 - margin.top - margin.bottom;
@@ -58,9 +58,42 @@ function renderRoadNetworkCongestion(data) {
         .attr("width", x.bandwidth())
         .attr("height", d => height - y(data[d]))
         .attr("fill", "deepskyblue");
+    
+    // 시각화 옵션 저장
+    visualizationOptions['RoadNetworkCongestion'] = {
+        x: x,
+        height: height,
+    };
+    
+    // 시간 필터 설정된 시간대 강조
+    svg.append("rect").attr("id", "no-congestion-time-range");
+    renderTimeRangeToRoadNetworkCongestion(timeRange);
 }
 
-function renderNetworkTCI(data) {
+function renderTimeRangeToRoadNetworkCongestion(timeRange) {
+    const rect = d3.select("#no-congestion-time-range");
+    const {x, height} = visualizationOptions['RoadNetworkCongestion'];
+
+    // 시간 필터가 설정된 경우 해당 시간대 강조
+    if (timeRange[0] != 0 || timeRange[1] != 23) {
+        const startX = x(timeRange[0]);
+        const endX = x(timeRange[1]);
+
+        if (isNaN(startX) || isNaN(endX))
+            return;
+
+        rect
+            .attr("x", x(timeRange[0]))
+            .attr("width", x(timeRange[1]) - x(timeRange[0]) + x.bandwidth())
+            .attr("height", height)
+            .attr("fill", "#777")
+            .attr("fill-opacity", 0.2);
+    } else {
+        rect.attr("fill-opacity", 0);
+    }
+}
+
+function renderNetworkTCI(data, timeRange) {
     var margin = { top: 5, right: 5, bottom: 17, left: 30 },
         width = 425 - margin.left - margin.right,
         height = 175 - margin.top - margin.bottom;
@@ -104,4 +137,37 @@ function renderNetworkTCI(data) {
             .x(d => x(d))
             .y(d => y(data[d]))
         );
+
+    // 시각화 옵션 저장
+    visualizationOptions['NetworkTCI'] = {
+        x: x,
+        height: height,
+    };
+    
+    // 시간 필터 설정된 시간대 강조
+    svg.append("rect").attr("id", "network-tci-time-range");
+    renderTimeRangeToNetworkTCI(timeRange);
+}
+
+function renderTimeRangeToNetworkTCI(timeRange) {
+    const rect = d3.select("#network-tci-time-range");
+    const {x, height} = visualizationOptions['NetworkTCI'];
+
+    // 시간 필터가 설정된 경우 해당 시간대 강조
+    if (timeRange[0] != 0 || timeRange[1] != 23) {
+        const startX = x(timeRange[0]);
+        const endX = x(timeRange[1]);
+
+        if (isNaN(startX) || isNaN(endX))
+            return;
+
+        rect
+            .attr("x", x(timeRange[0]))
+            .attr("width", x(timeRange[1]) - x(timeRange[0]))
+            .attr("height", height)
+            .attr("fill", "#777")
+            .attr("fill-opacity", 0.2);
+    } else {
+        rect.attr("fill-opacity", 0);
+    }
 }

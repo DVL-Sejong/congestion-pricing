@@ -1,4 +1,4 @@
-function renderParallelCoordinates(data) {
+function renderParallelCoordinates(data, filterOptions) {
     // set the dimensions and margins of the graph
     var margin = { top: 5, right: 10, bottom: 17, left: 30 },
         width = 480 - margin.left - margin.right,
@@ -75,23 +75,38 @@ function renderParallelCoordinates(data) {
         .style("stroke", "deepskyblue")
         .style("opacity", 1);
     
-    const brush = d3.brushX()
-        .extent([[0, 0], [width, height]])
-        // .on("brush", brushed);
+    // 시각화 옵션 저장
+    visualizationOptions['AverageTCI'] = {
+        x: x,
+        height: height,
+    };
     
-    const brushobj = svg.append("g")
-        .attr("class", "brush")
-        .call(brush)
-    brushobj
-        .select(".selection")
-        .attr("opacity", "0.5");
-    brushobj
-        .selectAll(".handle")
-        .remove();
+    // 시간 필터 설정된 시간대 강조
+    svg.append("rect").attr("id", "average-tci-time-range");
+    renderTimeRangeToParallelCoordinates(filterOptions['time_range']);
 }
 
-function highlightTimeRangeToParallelCoordinates(timeRange) {
-    
+function renderTimeRangeToParallelCoordinates(timeRange) {
+    const rect = d3.select("#average-tci-time-range");
+    const {x, height} = visualizationOptions['AverageTCI'];
+
+    // 시간 필터가 설정된 경우 해당 시간대 강조
+    if (timeRange[0] != 0 || timeRange[1] != 23) {
+        const startX = x(timeRange[0]);
+        const endX = x(timeRange[1]);
+
+        if (isNaN(startX) || isNaN(endX))
+            return;
+
+        rect
+            .attr("x", x(timeRange[0]))
+            .attr("width", x(timeRange[1]) - x(timeRange[0]))
+            .attr("height", height)
+            .attr("fill", "#777")
+            .attr("fill-opacity", 0.2);
+    } else {
+        rect.attr("fill-opacity", 0);
+    }
 }
 
 function renderDistrictList(filterOptions) {
