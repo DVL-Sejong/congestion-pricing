@@ -59,11 +59,8 @@ $(document).ready(function() {
         // 폴리곤 강조
         $inspector.trigger("reset");
         const layer = districtLayer._layers[district_layers[districtName]];
-        layer.setStyle({
-            ...districtLayerSelectedStyle,
-            ...districtLayerPolicyStyle(policy['cost']),
-        });
         layer['inspector_opened'] = true;
+        focusDistrict(districtName);
 
         // 컨텍스트 저장
         $inspector.data("current_district", districtName);
@@ -88,24 +85,16 @@ $(document).ready(function() {
 
     $inspector.on("reset", function() {
         if ($inspector.data("current_layer")) {
-            // 폴리곤 강조 해제
+            const districtName = $inspector.data("current_district");
             const layer = districtLayer._layers[$inspector.data("current_layer")];
-            const policy = district_policy[$inspector.data("current_district")];
-            layer.setStyle({
-                ...districtLayerDefaultStyle,
-                ...districtLayerPolicyStyle(policy['cost']),
-            });
-            layer['inspector_opened'] = false;
-
-            // District List에서 강조 해제
-            const $districts = $("#district-list-body > tr > td.name");
-            for (let item of $districts)
-                if ($(item).text() == $inspector.data("current_district"))
-                    $(item).removeClass("focused");
 
             // 컨텍스트 삭제
-            $inspector.removeData("current_district")
+            layer['inspector_opened'] = false;
+            $inspector.removeData("current_district");
             $inspector.removeData("current_layer");
+            
+            // 강조 해제
+            unfocusDistrict(districtName);
         }
     });
 

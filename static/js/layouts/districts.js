@@ -87,6 +87,19 @@ function renderParallelCoordinates(data, filterOptions) {
         .style("fill", "none")
         .style("stroke", "deepskyblue")
         .style("opacity", 1);
+    // Draw lines when shown focused
+    svg
+        .append("g")
+        .attr("class", "focused")
+        .selectAll("myPath")
+        .data(data)
+        .enter().append("path")
+        .attr("d", path)
+        .style("display", "none")
+        .style("fill", "none")
+        .style("stroke", "color(srgb 0.58 0.63 0.9)")
+        .style("stroke-width", "2")
+        .style("opacity", 1);
     
     // 시각화 옵션 저장
     visualizationOptions['AverageTCI'] = {
@@ -201,9 +214,8 @@ function renderDistrictList(filterOptions) {
                 $row.on("click", () => $("#inspector").trigger("open", [districtName]));
 
                 // 마우스 이벤트
-                const layer = districtLayer._layers[district_layers[districtName]];
-                $row.on("mouseover", () => districtLayer.fire("mouseover", {layer: layer}));
-                $row.on("mouseout", () => districtLayer.fire("mouseout", {layer: layer}));
+                $row.on("mouseover", () => focusDistrict(districtName));
+                $row.on("mouseout", () => unfocusDistrict(districtName));
             }
 
             // Average TCI 시각화에서의 필터를 적용
@@ -225,4 +237,60 @@ function filterDistrictList() {
         }
     else
         rows.removeClass("hidden");
+}
+
+function focusDistrict(districtName) {
+    const layer = districtLayer._layers[district_layers[districtName]];
+    const policy = district_policy[districtName];
+
+    // 해당 행정구역에 대한 Inspector가 열려있지 않은 경우
+    if (!layer['inspector_opened']) {
+        // 지도에서 행정구역 강조
+        layer.setStyle({
+            ...districtLayerMouseOverStyle,
+            ...districtLayerPolicyStyle(policy['cost']),
+        });
+
+        // Average TCI에서 강조
+        d3.select("#average-tci svg g.focused")
+            .selectAll("path")
+            .filter(d => d['name'] == districtName || d['name'] == $("#inspector").data("current_district"))
+            .style("display", "inline");
+
+        // District List에서 강조
+        const $districts = $("#district-list-body > tr > td.name");
+        for (let item of $districts) {
+            const toggle = $(item).text() == districtName || $(item).text() == $("#inspector").data("current_district");
+            if (toggle)
+                $(item).addClass("focused");
+        }
+    }
+}
+
+function unfocusDistrict(districtName) {
+    const layer = districtLayer._layers[district_layers[districtName]];
+    const policy = district_policy[districtName];
+
+    // 해당 행정구역에 대한 Inspector가 열려있지 않은 경우
+    if (!layer['inspector_opened']) {
+        // 지도에서 행정구역 강조 해제
+        layer.setStyle({
+            ...districtLayerDefaultStyle,
+            ...districtLayerPolicyStyle(policy['cost'])
+        });
+
+        // Average TCI에서 강조 해제
+        d3.select("#average-tci svg g.focused")
+            .selectAll("path")
+            .filter(d => d['name'] == districtName)
+            .style("display", "none");
+
+        // District List에서 강조 해제
+        const $districts = $("#district-list-body > tr > td.name");
+        for (let item of $districts) {
+            const toggle = $(item).text() == districtName;
+            if (toggle)
+                $(item).removeClass("focused");
+        }
+    }
 }
