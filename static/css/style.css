@@ -276,6 +276,9 @@ hr {
 .districts .district-list .district-list-body > tr > td:nth-child(3) {
     width: 150px;
 }
+.districts .district-list .district-list-body > tr > td.name.focused {
+    font-weight: bold;
+}
 .districts .district-list .tci {
     padding: 3px;
     text-align: center;

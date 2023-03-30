@@ -41,19 +41,41 @@ districtLayer.on("ready", function() {
 
 // 폴리곤 마우스 오버 시 강조
 districtLayer.on("mouseover", function(e) {
-    const policy = district_policy[e.layer.feature.properties.nhood];
-    if (!e.layer['inspector_opened'])
+    const districtName = e.layer.feature.properties.nhood;
+    const policy = district_policy[districtName];
+
+    // 해당 행정구역에 대한 Inspector가 열려있지 않은 경우
+    if (!e.layer['inspector_opened']) {
+        // 지도에서 행정구역 강조
         e.layer.setStyle({
             ...districtLayerMouseOverStyle,
             ...districtLayerPolicyStyle(policy['cost']),
         });
+    
+        // District List에서 강조
+        const $districts = $("#district-list-body > tr > td.name");
+        for (let item of $districts)
+            if ($(item).text() == districtName)
+                $(item).addClass("focused");
+    }
 }).on("mouseout", function(e) {
-    const policy = district_policy[e.layer.feature.properties.nhood];
-    if (!e.layer['inspector_opened'])
+    const districtName = e.layer.feature.properties.nhood;
+    const policy = district_policy[districtName];
+
+    // 해당 행정구역에 대한 Inspector가 열려있지 않은 경우
+    if (!e.layer['inspector_opened']) {
+        // 지도에서 행정구역 강조 해제
         e.layer.setStyle({
             ...districtLayerDefaultStyle,
             ...districtLayerPolicyStyle(policy['cost'])
         });
+
+        // District List에서 강조 해제
+        const $districts = $("#district-list-body > tr > td.name");
+        for (let item of $districts)
+            if ($(item).text() == districtName)
+                $(item).removeClass("focused");
+    }
 });
 
 // 폴리곤 클릭 시 인스펙터 열기

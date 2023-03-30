@@ -182,12 +182,12 @@ function renderDistrictList(filterOptions) {
 
             // District List 렌더링
             $("#district-list-body tr").not("#district-list-template").remove();
-            for (let district of data['sorted']) {
+            for (let districtName of data['sorted']) {
                 const $row = $("#district-list-template").clone().removeAttr("id");
-                const tci = data['tci'][district].toFixed(2);
-                const crr = (data['crr'][district] * 100.0).toFixed(0);
+                const tci = data['tci'][districtName].toFixed(2);
+                const crr = (data['crr'][districtName] * 100.0).toFixed(0);
 
-                $row.find(".name").text(district);
+                $row.find(".name").text(districtName);
                 $row.find(".tci").text(tci)
                     .css({
                         backgroundColor: getTCIColor(tci),
@@ -198,7 +198,12 @@ function renderDistrictList(filterOptions) {
                 $row.removeClass("hidden").appendTo("#district-list-body");
 
                 // 클릭 시 인스펙터 열기
-                $row.on("click", () => $("#inspector").trigger("open", [district]));
+                $row.on("click", () => $("#inspector").trigger("open", [districtName]));
+
+                // 마우스 이벤트
+                const layer = districtLayer._layers[district_layers[districtName]];
+                $row.on("mouseover", () => districtLayer.fire("mouseover", {layer: layer}));
+                $row.on("mouseout", () => districtLayer.fire("mouseout", {layer: layer}));
             }
 
             // Average TCI 시각화에서의 필터를 적용

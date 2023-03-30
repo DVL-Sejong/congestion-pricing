@@ -97,6 +97,12 @@ $(document).ready(function() {
             });
             layer['inspector_opened'] = false;
 
+            // District List에서 강조 해제
+            const $districts = $("#district-list-body > tr > td.name");
+            for (let item of $districts)
+                if ($(item).text() == $inspector.data("current_district"))
+                    $(item).removeClass("focused");
+
             // 컨텍스트 삭제
             $inspector.removeData("current_district")
             $inspector.removeData("current_layer");
