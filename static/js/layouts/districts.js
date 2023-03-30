@@ -65,8 +65,21 @@ function renderParallelCoordinates(data, filterOptions) {
         .call(d3.axisBottom(x))
         .selectAll("text").attr("fill", "#555");
 
-    // Draw the lines
+    // Draw inactive lines
     svg
+        .append("g")
+        .attr("class", "inactive")
+        .selectAll("myPath")
+        .data(data)
+        .enter().append("path")
+        .attr("d", path)
+        .style("fill", "none")
+        .style("stroke", "#00759d")
+        .style("opacity", 0.2);
+    // Draw active lines
+    svg
+        .append("g")
+        .attr("class", "active")
         .selectAll("myPath")
         .data(data)
         .enter().append("path")
@@ -79,11 +92,56 @@ function renderParallelCoordinates(data, filterOptions) {
     visualizationOptions['AverageTCI'] = {
         x: x,
         height: height,
+        filtered: false,
+        filteredDistricts: [],
     };
     
     // 시간 필터 설정된 시간대 강조
     svg.append("rect").attr("id", "average-tci-time-range");
     renderTimeRangeToParallelCoordinates(filterOptions['time_range']);
+
+    // Add Y axis brush
+    const brush = d3.brushY()
+        .extent([[0, 0], [10, height]])
+        .on("start brush end", onBrush);
+    svg.selectAll("myAxis")
+        .data(dimensions).enter()
+        .append("g")
+        .attr("transform", d => `translate(${x(d)-5})`)
+        .call(brush)
+        .select(".selection")
+        .attr("stroke", "none");
+
+    // Y축 브러시 이벤트
+    const filters = {};
+    function onBrush(yValue) {
+        if (!d3.event.sourceEvent)
+            return;
+        if (d3.event.selection != null)
+            filters[yValue] = d3.event.selection.map(d => y[yValue].invert(d));
+        else if (yValue in filters)
+            delete(filters[yValue]);
+        visualizationOptions['AverageTCI'].filtered = d3.event.selection != null;
+        applyFilters();
+    }
+
+    // Y축 브러시 필터링
+    function applyFilters() {
+        // Y축 브러시에 의해 필터링된 선들을 숨김
+        // g.active만 숨겨지며 하위 레이어인 g.inactive가 보이게 됨
+        d3.select("g.active").selectAll("path")
+            .style("display", d => selected(d) ? null : "none");
+        
+        // District List에 필터링 결과 적용
+        visualizationOptions['AverageTCI'].filteredDistricts = data.filter(d => selected(d)).map(d => d['name']);
+        filterDistrictList();
+    }
+
+    // Y축 브러시 필터 내에 데이터가 포함되는지 검사
+    function selected(d) {
+        const _filters = d3.entries(filters);
+        return _filters.every(f => f.value[1] <= d[f.key] && d[f.key] <= f.value[0]);
+    }
 }
 
 function renderTimeRangeToParallelCoordinates(timeRange) {
@@ -142,5 +200,24 @@ function renderDistrictList(filterOptions) {
                 // 클릭 시 인스펙터 열기
                 $row.on("click", () => $("#inspector").trigger("open", [district]));
             }
+
+            // Average TCI 시각화에서의 필터를 적용
+            filterDistrictList();
         });
+}
+
+function filterDistrictList() {
+    if ('AverageTCI' in visualizationOptions === false || !visualizationOptions['AverageTCI'].filteredDistricts)
+        return;
+    
+    const {filtered, filteredDistricts} = visualizationOptions['AverageTCI'];
+    const rows = $("#district-list-body tr").not("#district-list-template");
+
+    if (filtered) // 필터가 적용된 경우
+        for (let row of rows) {
+            const districtName = $(row).children("td.name").text();
+            $(row).toggleClass("hidden", filteredDistricts.indexOf(districtName) === -1);
+        }
+    else
+        rows.removeClass("hidden");
 }
