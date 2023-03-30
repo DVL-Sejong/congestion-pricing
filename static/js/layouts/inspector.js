@@ -59,7 +59,10 @@ $(document).ready(function() {
         // 폴리곤 강조
         $inspector.trigger("reset");
         const layer = districtLayer._layers[district_layers[districtName]];
-        layer.setStyle(districtLayerSelectedStyle);
+        layer.setStyle({
+            ...districtLayerSelectedStyle,
+            ...districtLayerPolicyStyle(policy['cost']),
+        });
         layer['inspector_opened'] = true;
 
         // 컨텍스트 저장
@@ -87,7 +90,11 @@ $(document).ready(function() {
         if ($inspector.data("current_layer")) {
             // 폴리곤 강조 해제
             const layer = districtLayer._layers[$inspector.data("current_layer")];
-            layer.setStyle(districtLayerDefaultStyle);
+            const policy = district_policy[$inspector.data("current_district")];
+            layer.setStyle({
+                ...districtLayerDefaultStyle,
+                ...districtLayerPolicyStyle(policy['cost']),
+            });
             layer['inspector_opened'] = false;
 
             // 컨텍스트 삭제
@@ -99,15 +106,18 @@ $(document).ready(function() {
     // Pricing Scheme 설정 시
     $inspector.find("#pricing-scheme").on("input", function(e) {
         const districtName = $inspector.data("current_district");
+        const scheme = $(this).val();
         if (districtName) {
-            district_policy[districtName]['scheme'] = $(this).val();
+            district_policy[districtName]['scheme'] = scheme;
         }
     });
     // Pricing Cost 조정 시
     $inspector.find("#pricing-cost").on("input", function(e) {
         const districtName = $inspector.data("current_district");
+        const cost = parseInt($(this).val());
         if (districtName) {
-            district_policy[districtName]['cost'] = $(this).val();
+            district_policy[districtName]['cost'] = cost;
+            districtLayer.fire("policy_heatmap", {districtName: districtName});
         }
     });
 });

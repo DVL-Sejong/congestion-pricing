@@ -5,6 +5,8 @@ let district_roads; // 하위 행정구역에 존재하는 도로들
 let district_center; // 하위 행정구역들의 폴리곤 무게중심
 let district_layers; // 하위 행정구역들의 폴리곤 레이어
 let district_policy; // 하위 행정구역별로 적용된 혼잡세 정책
+let pricing_cost_list; // 혼잡세 가격 옵션들
+let max_pricing_cost; // 최대 혼잡세 가격
 
 // 기본 혼잡세 정책
 const defaultPolicy = {
@@ -47,6 +49,11 @@ $(document).ready(function() {
     renderDistrictList(filterOptions);
 
     renderOverview(filterOptions);
+
+    d3.csv("/static/data/sanfrancisco/delay_sf.csv", data => {
+        pricing_cost_list = data.map(d => parseInt(+d.Toll / 60));
+        max_pricing_cost = Math.max.apply(Math, data.map(d => parseInt(+d.Toll / 60)));
+    });
 });
 
 function parseTimeSeasonality(data_, axis=0) {
