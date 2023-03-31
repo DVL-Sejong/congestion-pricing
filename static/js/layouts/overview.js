@@ -1,5 +1,5 @@
 function renderOverview(filterOptions) {
-    d3.json("/data/overview/status")
+    d3.json(`/data/${city}/overview/status`)
         .header("Content-Type", "application/json")
         .post(JSON.stringify(filterOptions), data => {
             // 현재 필터 설정과 같지 않은 경우 무시

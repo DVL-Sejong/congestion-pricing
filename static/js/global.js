@@ -1,3 +1,4 @@
+let city = $("#dataset-location").val(); // 혼잡세 분석 대상 도시
 let data_city_tci_date; // 도시 전체의 날짜별 TCI
 let data_city_tci_time; // 도시 전체의 날짜&시간별 TCI
 let data_district_tci_time; // 하위 행정구역들의 날짜&시간별 TCI

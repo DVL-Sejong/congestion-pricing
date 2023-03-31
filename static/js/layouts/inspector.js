@@ -118,7 +118,7 @@ $(document).ready(function() {
 });
 
 function renderPricingDelay() {
-    d3.csv("/static/data/sanfrancisco/delay_sf.csv", data => {
+    d3.csv(`/static/data/${city}/delay_sf.csv`, data => {
         var margin = { top: 5, right: 5, bottom: 17, left: 50 },
             width = 340 - margin.left - margin.right,
             height = 175 - margin.top - margin.bottom;

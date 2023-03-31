@@ -20,7 +20,7 @@ const districtLayerPolicyStyle = cost => cost > 0 ? { // 혼잡세 적용 시 �
 } : {};
 
 // 샌프란시스코 하위 행정구역 드로잉
-const districtLayer = L.mapbox.featureLayer("/static/data/sanfrancisco/Analysis Neighborhoods(b).geojson", {
+const districtLayer = L.mapbox.featureLayer(`/static/data/${city}/Analysis Neighborhoods(b).geojson`, {
     style: districtLayerDefaultStyle
 })
 .addTo(map);

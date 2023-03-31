@@ -185,7 +185,7 @@ function renderDistrictList(filterOptions) {
         'date_range': filterOptions['date_range'],
         'time_range': filterOptions['time_range'],
     };
-    d3.json("/data/districts/status")
+    d3.json(`/data/${city}/districts/status`)
         .header("Content-Type", "application/json")
         .post(JSON.stringify(params), data => {
             // 현재 필터 설정과 같지 않은 경우 무시
